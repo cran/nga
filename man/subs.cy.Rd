@@ -31,18 +31,19 @@ SaMedian.cy(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, AS, Fhw, dip, Vs30, Z1.0, T)
     strike; site coordinate (km).}
   \item{Ztor}{Depth to top of rupture (km).}
   \item{Frv}{Reverse style-of-faulting flag; equal to 1 for reverse
-    faulting (30 <= rake <= 150 deg), and 0 otherwise.}
+    faulting (\code{30 <= rake <= 150 deg}), and 0 otherwise.}
   \item{Fnm}{Normal style-of-faulting flag; equal to 1 for normal
-    faulting (-120 <= rake <= -60 deg), and 0 otherwise.}
+    faulting (\code{-120 <= rake <= -60 deg}), and 0 otherwise.}
   \item{AS}{Aftershock flag; equal to 1 for aftershocks and 0 for
     mainshocks.}
   \item{Fhw}{Hanging wall flag; equal to 1 for sites on the hanging
-    wall side of the fault (Rx >= 0) and 0 otherwise.}
+    wall side of the fault (\code{Rx >= 0}) and 0 otherwise.}
   \item{dip}{Fault dip angle (deg).}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
-  \item{VsFlag}{Flag variable indicating how Vs30 is obtained; equal
-    to 1 if Vs30 is measured, and 0 if Vs30 is estimated or inferred.}
+  \item{VsFlag}{Flag variable indicating how \code{Vs30} is obtained;
+    equal to 1 if \code{Vs30} is measured, and 0 if \code{Vs30} is
+    estimated or inferred.}
   \item{Z1.0}{Depth to Vs = 1.0 km/s (m).}
   \item{Yref}{Median ground motion for the reference rock site
     condition (g).}

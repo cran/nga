@@ -35,28 +35,32 @@
 # INPUT PARAMETERS FOR THE FUNCTIONS BELOW:
 #   M = Moment magnitude
 #   Rjb = Joyner-Boore distance (km)
+#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
+#   epsilon = number of standard deviations to be considered in the calculations
+#   T = Spectral period, sec (0 for PGA; -1 for PGV; -2 for PGD)
 #   Rrup = Rupture distance (km)
-#   Rx = Site coordinate (km); used for the calculation of Rrup
-#   rake = Rake angle of fault movement (deg)
 #   dip = Fault dip (deg)
 #   W = Down-dip rupture width (km); used for the calculation of Rrup
 #   Ztor = Depth to top of rupture (km)
-#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
 #   Z1.0 = Depth to Vs = 1.0 km/sec  (m); used to estimate Z2.5
 #   Z1.5 = Depth to Vs = 1.5 km/sec  (m); used to estimate Z2.5
 #   Z2.5 = Depth to Vs = 2.5 km/sec  (km) -- note the units difference from Z1.0 and Z1.5
+#   rake = Rake angle of fault movement (deg)
 #   Frv = Reverse style-of-faulting flag (1 for reverse faulting,
 #         0 otherwise); calculated from rake
 #   Fnm = Normal style-of-faulting flag (1 for normal faulting,
 #         0 otherwise); calculated from rake
+#   Fhw = Hanging wall flag; equal to 1 for sites on the hanging wall side of the fault
+#         (azimuth >= 0), and 0 otherwise.  Used in the calculation of Rrup when Rrup
+#         is unspecified.
+#   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010).
+#             Used in the calculation of Rrup when Rrup is unspecified.
 #   Zhyp = hypocentral depth (km)
-#   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
-#   PGA1100 = median PGA when Vs30 = 1100 m/s
 #   arb = "1" if the standard deviation should be calculated for the arbitrary
 #         horizontal component; 0 if the standard deviation should be calculated
 #         for the geometric mean of LnY
-#   epsilon = number of standard deviations to be considered in the calculations
-#   T = Spectral period, sec (0 for PGA; -1 for PGV; -2 for PGD)
+#   PGA1100 = median PGA when Vs30 = 1100 m/s
+
 
 # OUTPUT PARAMETERS (from Sa function):
 #   Sa = Spectral acceleration (g)
@@ -512,16 +516,18 @@ SaMedian.cb <- function(M, Rjb, Rrup, Ztor, Frv, Fnm, dip, Vs30, Z2.5, T){
 
 
 # 5. FINAL FUNCTION FOR CB08 GROUND MOTION CALCULATIONS
-Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
-                  W = NA, Ztor = NA, Vs30, Z1.0 = NA, Z1.5 = NA, Z2.5 = NA, Zhyp = NA,
-                  Fhw = NA, azimuth = NA, arb = 0, epsilon, T){
 
+Sa.cb <- function(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA, Ztor = NA,
+                  Z1.0 = NA, Z1.5 = NA, Z2.5 = NA, rake = NA, Frv = NA, Fnm = NA,
+                  Fhw = NA, azimuth = NA, Zhyp = NA, arb = 0){
+
+  
   # If T is a vector, perform calculation for each of the elements
   if(length(T) > 1) {
-    return(sapply(T, Sa.cb, M = M, Rjb = Rjb, Rrup = Rrup, rake = rake,
-                  Frv = Frv, Fnm = Fnm, dip = dip, W = W, Ztor = Ztor,
-                  Vs30 = Vs30, Z1.0 = Z1.0, Z1.5 = Z1.5, Z2.5 = Z2.5, Zhyp = Zhyp,
-                  Fhw = Fhw, azimuth = azimuth, arb = arb, epsilon = epsilon))
+    return(sapply(T, Sa.cb, M = M, Rjb = Rjb, Vs30 = Vs30, epsilon = epsilon,
+                  Rrup = Rrup, dip = dip, W = W, Ztor = Ztor, Z1.0 = Z1.0,
+                  Z1.5 = Z1.5, Z2.5 = Z2.5, rake = rake, Frv = Frv, Fnm = Fnm,
+                  Fhw = Fhw, azimuth = azimuth, Zhyp = Zhyp, arb = arb))
 
   # Perform calculation for single value of T:
   } else {
@@ -541,6 +547,24 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
     if(is.na(arb) == TRUE | !(arb == 1 | arb == 0))
       stop("arb must be either 1 (to output the standard deviation of the arbitrary horizontal component of ground motion)",
            "\n", "or 0 (to output the standard deviation of the geometric mean horizontal component of ground motion, the default)")
+
+    # Check optional distance, source, and site parameters
+    if(is.na(Rrup) == FALSE & Rrup < 0)
+      stop("Rrup must be a non-negative number; use NA if unknown.")
+    if(is.na(dip) == FALSE & (dip <= 0 | dip > 90))
+      stop("dip must be be greater than 0 and less than or equal to 90 deg; use NA if unknown.")
+    if(is.na(W) == FALSE & W < 0)
+      stop("W must be a non-negative number; use NA if unknown")
+    if(is.na(Ztor) == FALSE & Ztor < 0)
+      stop("Ztor must be a non-negative number; use NA if unknown.")
+    if(is.na(Z1.0) == FALSE & Z1.0 < 0)
+      stop("Z1.0 must be a non-negative number; use NA if unknown.")
+    if(is.na(Z1.5) == FALSE & Z1.5 < 0)
+      stop("Z1.5 must be a non-negative number; use NA if unknown.")
+    if(is.na(Z2.5) == FALSE & Z2.5 < 0)
+      stop("Z2.5 must be a non-negative number; use NA if unknown.")
+    if(is.na(Zhyp) == FALSE & Zhyp < 0)
+      stop("Zhyp must be a non-negative number; use NA if unknown.")
     
     # Check style of faulting parameters
     if(is.na(rake) == TRUE & (is.na(Frv) == TRUE | is.na(Fnm) == TRUE))
@@ -554,18 +578,18 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
       if(Frv == 1 & Fnm == 1)
         stop("either Frv or Fnm may be equal to 1, but both flags cannot be equal to 1")
       if(!(Frv == 1 & Fnm == 0) & !(Frv == 0 & Fnm == 1) & !(Frv == 0 & Fnm == 0))
-        stop("Frv must be 1 for reverse faulting (30 <= rake <= 150) and 0 otherwise.",
-             "\n", "Fnm must be 1 for normal faulting (-150 <= rake <= -30) and 0 otherwise.")
+        stop("Frv must be 1 for reverse faulting (30 < rake < 150) and 0 otherwise.",
+             "\n", "Fnm must be 1 for normal faulting (-150 < rake < -30) and 0 otherwise.")
     }
     # Ensure consistency between rake, Frv, and Fnm
     if(is.na(rake) == FALSE & is.na(Frv) == FALSE & is.na(Fnm) == FALSE){
-      if(rake >= 30 & rake <= 150 & !(Frv == 1 & Fnm == 0))
+      if(rake > 30 & rake < 150 & !(Frv == 1 & Fnm == 0))
         stop("Inconsistency between rake and style-of-faulting flag variables:", "\n",
-             "Frv = 1 and Fnm = 0 for reverse faulting (30 <= rake <= 150)")
-      if(rake >= -150 & rake <= -30 & !(Frv == 0 & Fnm == 1))
+             "Frv = 1 and Fnm = 0 for reverse faulting (30 < rake < 150)")
+      if(rake > -150 & rake < -30 & !(Frv == 0 & Fnm == 1))
         stop("Inconsistency between rake and style-of-faulting flag variables:", "\n",
-             "Frv = 0 and Fnm = 1 for normal faulting (-120 <= rake <= -60)")
-      if((abs(rake) < 30 | abs(rake) > 150) & !(Frv == 0 & Fnm == 0))
+             "Frv = 0 and Fnm = 1 for normal faulting (-150 < rake < -30)")
+      if((abs(rake) <= 30 | abs(rake) >= 150) & !(Frv == 0 & Fnm == 0))
         stop("Inconsistency between rake and style-of-faulting flag variables:", "\n",
              "Frv = 0 and Fnm = 0 for strike-slip faulting.")
     }
@@ -573,11 +597,20 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
     # Check hanging wall parameters (only necessary when Rrup is not specified, since
     # Rrup is calculated from Rx, which is calculated from Rjb)
     if(is.na(Rrup) == TRUE | Rrup < 0){
-      if(is.na(azimuth) == FALSE & abs(azimuth) > 180)
-        stop("the source-to-site azimuth must be between -180 and 180, inclusive")
+      # Check Fhw
       if(is.na(Fhw) == FALSE & !(Fhw == 1 | Fhw == 0))
         stop("Fhw must be either 1 (for sites on the hanging wall side of the fault)", "\n",
              "or 0 (for sites on the footwall side of the fault)")
+      # If abs(azimuth) > 180, assign azimuth based on the value of Fhw
+      if(is.na(azimuth) == FALSE & is.na(Fhw) == FALSE){
+        if(Fhw == 1){
+          azimuth <- 50
+         } else{
+          if(Fhw == 0){
+            azimuth <- -50
+          }
+        }
+      }
       # Ensure consistency between azimuth and Fhw
       if(is.na(azimuth) == FALSE & is.na(Fhw) == FALSE){
         if(azimuth < 0 & Fhw == 1)
@@ -608,34 +641,38 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
     # Convert rake to fault type if rake is provided
     if(is.na(Frv) == TRUE & is.na(Fnm) == TRUE){
       # Frv
-      if(rake >= 30 & rake <= 150)
+      if(rake > 30 & rake < 150)
         Frv <- 1
       else
         Frv <- 0
       # Fnm
-      if(rake >= -150 & rake <= -30)
+      if(rake > -150 & rake < -30)
         Fnm <- 1
       else
         Fnm <- 0
     }
 
     # Dip angle
-    if(is.na(dip) == TRUE | dip < 0)
+    if(is.na(dip) == TRUE)
       dip <- dip.calc(rake)
 
     # Depth to top of rupture, Ztor
-    if(is.na(Ztor) == TRUE | Ztor < 0){
+    if(is.na(Ztor) == TRUE){
       # Down-dip rupture width, W (used for calculating Ztor)
-      if(is.na(W) == TRUE | W < 0)
+      if(is.na(W) == TRUE)
         W <- W.calc(M, rake)
-      Ztor <- Ztor.calc(Zhyp, W, dip, M, rake)
+      # Hypocentral depth, Zhyp (used for calculating Ztor)
+      if(is.na(Zhyp) == TRUE)
+        Zhyp <- Zhyp.calc(M, rake)
+      # Calculation of Ztor
+      Ztor <- Ztor.calc(W, dip, Zhyp)
     }
 
     # Calculate Rrup from Rjb (using distance equations from Kaklamanos and
     # Baise (2010) if Rrup is not provided)
-    if(is.na(Rrup) == TRUE | Rrup < 0){
+    if(is.na(Rrup) == TRUE){
       # Down-dip rupture width, W (used for calculating Rrup)
-      if(is.na(W) == TRUE | W < 0)
+      if(is.na(W) == TRUE)
         W <- W.calc(M, rake)     
       # Azimuth angle (used for calculating Rrup)
       if(is.na(azimuth) == TRUE){
@@ -645,13 +682,19 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
             azimuth <- 50
           # If footwall site, assume azimuth = -50 deg  
           else
-            azimuth <- -50         
+            azimuth <- -50
         # If Fhw is not provided, assume azimuth = -50 deg (footwall site)
         # Rrup is calculated as sqrt(Ztor^2 + Rjb^2)
         } else{
           azimuth <- -50
         }         
       }
+      # Ensure that azimuth = 90 for Rjb = 0
+      if(Rjb == 0){
+        Fhw <- 1
+        azimuth <- 90
+      }
+
       # Site coordinate, Rx (used for calculating Rrup)
       Rx <- Rx.calc(Rjb, Ztor, W, dip, azimuth, Rrup)
       # Rupture distance, Rrup
@@ -663,12 +706,12 @@ Sa.cb <- function(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
     if(is.na(Z2.5) == TRUE){
       # Calculate from Z1.5 if provided
       # (Eqn 6.4 in Campbell and Bozorgnia (2007); final report to PEER)
-      if(is.na(Z1.5) == FALSE & Z1.5 > 0){
+      if(is.na(Z1.5) == FALSE){
         Z2.5 <- 0.636 + 0.001549*Z1.5
         # Calculate from Z1.0 if provided
         # (Eqn 6.3 in Campbell and Bozorgnia (2007); final report to PEER)
       } else{
-        if(is.na(Z1.0) == FALSE & Z1.0 > 0){
+        if(is.na(Z1.0) == FALSE){
           Z2.5 <- 0.519 + 0.003595*Z1.0
           # If neither Z1.0 nor Z1.5 is provided, estimate from
           # Vs30 using the AS08 relation for Z1.0 = f(Vs30)

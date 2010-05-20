@@ -4,10 +4,10 @@
 \alias{Z1.calc.cy}
 \title{Estimation of Depth Parameter, Z1.0}
 \description{
-  Estimates the depth parameter Z1.0 from the average shear wave
-  velocity (Vs30), using Equation 17 in Abrahamson and Silva (2008) and
-  Equation 1 in Chiou and Youngs (2008) for \code{Z1.calc.as} and
-  \code{Z1.calc.cy}, respectively.
+  Estimates the depth parameter \code{Z1.0} from the average shear wave
+  velocity (\code{Vs30}), using Equation 17 in Abrahamson and Silva
+  (2008) and Equation 1 in Chiou and Youngs (2008) for \code{Z1.calc.as}
+  and \code{Z1.calc.cy}, respectively.
 }
 \usage{
 Z1.calc.as(Vs30)
@@ -18,8 +18,8 @@ Z1.calc.cy(Vs30)
     depth of 30 meters (m/s).}
 }
 \value{
-  Estimated value of Z1.0, the depth to a shear wave velocity horizon of
-  Vs = 1.0 km/s  (m).
+  Estimated value of \code{Z1.0}, the depth to a shear wave velocity
+  horizon of Vs = 1.0 km/s  (m).
 }
 \seealso{
   \code{\link{Sa}}, \code{\link{Sa.nga}}.

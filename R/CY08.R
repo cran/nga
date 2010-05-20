@@ -29,28 +29,30 @@
 # INPUT PARAMETERS FOR THE FUNCTIONS BELOW:
 #   M = Moment magnitude
 #   Rjb = Joyner-Boore distance (km)
+#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
+#   VsFlag = Flag variable indicating how Vs30 is obtained
+#            (1 if measured, 0 if estimated/inferred)
+#   epsilon = number of standard deviations to be considered in the calculations
+#   T = Spectral period, sec (0 for PGA; -1 for PGV)
 #   Rrup = Rupture distance (km)
 #   Rx = Site coordinate (km)
-#   rake = Rake angle of fault movement (deg)
 #   dip = Fault dip (deg)
 #   W = Down-dip rupture width (km)
 #   Ztor = Depth to top of rupture (km)
-#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
+
 #   Z1.0 = Depth to Vs = 1.0 km/sec  (m)
-#   VsFlag = Flag variable indicating how Vs30 is obtained
-#            (1 if measured, 0 if estimated/inferred)
+#   rake = Rake angle of fault movement (deg)
+
 #   Frv = Reverse style-of-faulting flag (1 for reverse faulting,
 #         0 otherwise); calculated from rake
 #   Fnm = Normal style-of-faulting flag (1 for normal faulting,
 #         0 otherwise); calculated from rake
-#   AS = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   Fhw = Hanging wall flag (1 for site on hanging wall site of fault,
 #         0 otherwise); calculated from azimuth or Rx (if provided)
-#   Zhyp = hypocentral depth (km)
 #   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
+#   Zhyp = hypocentral depth (km)
+#   AS = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   Yref = median ground motion for the reference rock site condition (Eqn 13a)
-#   epsilon = number of standard deviations to be considered in the calculations
-#   T = Spectral period, sec (0 for PGA; -1 for PGV)
 
 
 # OUTPUT PARAMETERS (from Sa function):
@@ -456,16 +458,18 @@ SaMedian.cy <- function(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, AS, Fhw, dip, Vs30, Z1
 
 
 # 5. FINAL FUNCTION FOR CY08 GROUND MOTION CALCULATIONS
-Sa.cy <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
-                  Fhw = NA, dip = NA, W = NA, Ztor = NA, Vs30, Z1.0 = NA,
-                  VsFlag, AS = 0, Zhyp = NA, azimuth = NA, epsilon, T){
+
+Sa.cy <- function(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
+                  dip = NA, W = NA, Ztor = NA, Z1.0 = NA, rake = NA, Frv = NA,
+                  Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, AS = 0){
+
   
   # If T is a vector, perform calculation for each of the elements
   if(length(T) > 1 ) {
-    return(sapply(T, Sa.cy, M = M, Rjb = Rjb, Rrup = Rrup, Rx = Rx, rake = rake,
-                  Frv = Frv, Fnm = Fnm, Fhw = Fhw, dip = dip, W = W, Ztor = Ztor,
-                  Vs30 = Vs30, Z1.0 = Z1.0, VsFlag = VsFlag, AS = AS, Zhyp = Zhyp,
-                  azimuth = azimuth, epsilon = epsilon))
+    return(sapply(T, Sa.cy, M = M, Rjb = Rjb, Vs30 = Vs30, VsFlag = VsFlag,
+                  epsilon = epsilon, Rrup = Rrup, Rx = Rx, dip = dip, W = W,
+                  Ztor = Ztor, Z1.0 = Z1.0, rake = rake, Frv = Frv, Fnm = Fnm,
+                  Fhw = Fhw, azimuth = azimuth, Zhyp = Zhyp, AS = AS))
 
   # Perform calculation for single value of T:
   } else {
@@ -486,7 +490,21 @@ Sa.cy <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
       stop("epsilon must be numeric")
     if(is.na(AS) == TRUE | !(AS == 1 | AS == 0))
       stop("AS must be either 1 (for aftershocks) or 0 (for mainshocks, the default)")
-
+    
+    # Check optional distance, source, and site parameters
+    if(is.na(Rrup) == FALSE & Rrup < 0)
+      stop("Rrup must be a non-negative number; use NA if unknown.")
+    if(is.na(dip) == FALSE & (dip <= 0 | dip > 90))
+      stop("dip must be be greater than 0 and less than or equal to 90 deg; use NA if unknown.")
+    if(is.na(W) == FALSE & W < 0)
+      stop("W must be a non-negative number; use NA if unknown")
+    if(is.na(Ztor) == FALSE & Ztor < 0)
+      stop("Ztor must be a non-negative number; use NA if unknown.")
+    if(is.na(Z1.0) == FALSE & Z1.0 < 0)
+      stop("Z1.0 must be a non-negative number; use NA if unknown.")
+    if(is.na(Zhyp) == FALSE & Zhyp < 0)
+      stop("Zhyp must be a non-negative number; use NA if unknown.")
+    
     # Check style of faulting parameters
     if(is.na(rake) == TRUE & (is.na(Frv) == TRUE | is.na(Fnm) == TRUE))
       stop("either (1) the rake angle, or (2) both Frv and Fnm must be specified")
@@ -574,16 +592,21 @@ Sa.cy <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
     }
  
     # Dip angle
-    if(is.na(dip) == TRUE | dip < 0)
+    if(is.na(dip) == TRUE)
       dip <- dip.calc(rake)
     
     # Down-dip rupture width, W
-    if(is.na(W) == TRUE | W < 0)
+    if(is.na(W) == TRUE)
       W <- W.calc(M, rake)
 
     # Depth to top of rupture, Ztor
-    if(is.na(Ztor) == TRUE | Ztor < 0)
-      Ztor <- Ztor.calc(Zhyp, W, dip, M, rake)
+    if(is.na(Ztor) == TRUE){
+      # Hypocentral depth, Zhyp (used for calculating Ztor)
+      if(is.na(Zhyp) == TRUE)
+        Zhyp <- Zhyp.calc(M, rake)
+      # Calculation of Ztor
+      Ztor <- Ztor.calc(W, dip, Zhyp)
+    }
 
     # Determine hanging wall flag, Fhw
       # Calculate from azimuth if provided
@@ -611,17 +634,22 @@ Sa.cy <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
       else if(Fhw == 0)
         azimuth <- -50
     }
+    # Ensure that azimuth = 90 for Rjb = 0
+    if(Rjb == 0){
+      Fhw <- 1
+      azimuth <- 90
+    }
 
     # Site coordinate, Rx
     if(is.na(Rx) == TRUE)
       Rx <- Rx.calc(Rjb, Ztor, W, dip, azimuth, Rrup)
   
     # Rupture distance, Rrup
-    if(is.na(Rrup) == TRUE | Rrup < 0)
+    if(is.na(Rrup) == TRUE)
       Rrup <- Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb)
 
     # Depth parameter, Z1.0
-    if(is.na(Z1.0) == TRUE | Z1.0 < 0)
+    if(is.na(Z1.0) == TRUE)
       Z1.0 <- Z1.calc.cy(Vs30)
 
   

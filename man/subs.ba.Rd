@@ -26,12 +26,12 @@ SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T)
     wishes to perform a generic ground motion calculation when the style
     of faulting is unspecified, and 0 otherwise.}
   \item{RS}{Reverse style-of-faulting flag; equal to 1 for reverse
-    faulting (30 <= rake <= 150 deg), and 0 otherwise.}
+    faulting (\code{30 <= rake <= 150 deg}), and 0 otherwise.}
   \item{NS}{Normal style-of-faulting flag; equal to 1 for normal
-    faulting (-150 <= rake <= -30 deg), and 0 otherwise.}
+    faulting (\code{-150 <= rake <= -30 deg}), and 0 otherwise.}
   \item{SS}{Strike-slip style-of-faulting flag; equal to 1 for
     strike-slip faulting (when the rake is not in either of the ranges
-    specified for RS or NS), and 0 otherwise.}
+    specified for \code{RS} or \code{NS}), and 0 otherwise.}
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{

@@ -25,9 +25,20 @@
 #   M = Moment magnitude
 #   Rjb = Joyner-Boore distance (km)
 #   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
-#   rake = Rake angle of fault movement (deg)
 #   epsilon = number of standard deviations to be considered in the calculations
 #   T = Spectral period, sec (0 for PGA; -1 for PGV)
+#   rake = Rake angle of fault movement (deg)
+#   U = Unspecified style-of-faulting flag; equal to 1 if the user wishes to
+#       perform a generic ground motion calculation when the style of faulting
+#       is unspecified, and 0 otherwise.
+#   RS = Reverse style-of-faulting flag; equal to 1 for reverse faulting
+#        (30 <= rake <= 150 deg), and 0 otherwise.
+#   NS = Normal style-of-faulting flag; equal to 1 for normal faulting
+#        (-150 <= rake <= -30 deg), and 0 otherwise.
+#   SS = Strike-slip style-of-faulting flag; equal to 1 for strike-slip faulting
+#        (when the rake is not in either of the ranges specified for RS or NS),
+#        and 0 otherwise.
+
 
 # OUTPUT PARAMETERS (from Sa function):
 #   Sa = Spectral acceleration (g)
@@ -371,12 +382,12 @@ SaMedian.ba <- function(M, Rjb, Vs30, U, SS, NS, RS, T) {
 
 
 # 4. FINAL FUNCTION FOR BA08 GROUND MOTION CALCULATIONS
-Sa.ba <- function(M, Rjb, Vs30, rake = NA, U = NA, SS = NA, NS = NA, RS = NA, epsilon, T){
+Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA, RS = NA){
 
   # If T is a vector, perform calculation for each of the elements
   if(length(T) > 1) {
-    return(sapply(T, Sa.ba, M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake,
-                  U = U, SS = SS, NS = NS, RS = RS, epsilon = epsilon))
+    return(sapply(T, Sa.ba, M = M, Rjb = Rjb, Vs30 = Vs30, epsilon = epsilon,
+                  rake = rake, U = U, SS = SS, NS = NS, RS = RS))
 
   # Perform calculation for single value of T:
   } else {

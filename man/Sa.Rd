@@ -8,136 +8,149 @@
 \description{
   Main functions for estimating ground motion parameters using the
   ground motion prediction equations developed during the Next
-  Generation Attenuation of Ground Motions (NGA) project in 2008.
+  Generation Attenuation of Ground Motions (NGA) project in 2008.  Each
+  function performs ground motion calculations using for an individual
+  NGA model.
 }
 \usage{
-Sa.as(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
-      Fhw = NA, dip = NA, W = NA, Ztor = NA, Vs30, Z1.0 = NA,
-      VsFlag, Fas = 0, Zhyp = NA, azimuth = NA, epsilon, T)
-Sa.ba(M, Rjb, Vs30, rake = NA, U = NA, SS = NA, NS = NA, RS = NA,
-      epsilon, T)
-Sa.cb(M, Rjb, Rrup = NA, rake = NA, Frv = NA, Fnm = NA, dip = NA,
-      W = NA, Ztor = NA, Vs30, Z1.0 = NA, Z1.5 = NA, Z2.5 = NA,
-      Zhyp = NA, Fhw = NA, azimuth = NA, arb = 0, epsilon, T)
-Sa.cy(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
-      Fhw = NA, dip = NA, W = NA, Ztor = NA, Vs30, Z1.0 = NA,
-      VsFlag, AS = 0, Zhyp = NA, azimuth = NA, epsilon, T)
+Sa.as(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
+      dip = NA, W = NA, Ztor = NA, Z1.0 = NA, rake = NA, Frv = NA,
+      Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, Fas = 0)
+Sa.ba(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA,
+      NS = NA, RS = NA)
+Sa.cb(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA,
+      Ztor = NA, Z1.0 = NA, Z1.5 = NA, Z2.5 = NA, rake = NA,
+      Frv = NA, Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, arb = 0)
+Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
+      dip = NA, W = NA, Ztor = NA, Z1.0 = NA, rake = NA, Frv = NA,
+      Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, AS = 0)
 }
 \arguments{
   \item{M}{Moment magnitude of earthquake.}
   \item{Rjb}{Joyner-Boore distance (km):  the horizontal distance to the
     surface projection of the rupture plane.}
-  \item{Rrup}{Rupture distance (km):  the closest distance to the
-    rupture plane; if left empty (or set negative), Rrup is calculated
-    from Rx, the source-to-site azimuth, and the geometric rupture
-    parameters (Ztor, W, and dip) using \code{\link{Rrup.calc}}.}
-  \item{Rx}{Site coordinate (km):  The horizontal distance to the
-    surface projection of the top edge of the rupture plane, measured
-    perpendicular to the strike.  If left empty, Rx is calculated from Rjb, the
-    source-to-site azimuth, and the geometric rupture parameters (Ztor,
-    W, and dip) using \code{\link{Rx.calc}}.  When only Rjb and the
-    azimuth are assumed, Rjb is used to calculate Rx, which is then used
-    to calculate Rrup.}
-  \item{rake}{Rake angle of fault movement (deg).  Either the rake angle
-    or the style-of-faulting flag variables (Frv and Fnm for AS08, CB08,
-    and CY08; and U, SS, NS, and SS for BA08) must be specified.}
-  \item{Frv}{Reverse style-of-faulting flag (1 for reverse faulting, 0
-    otherwise) for the AS08, CB08, and CY08 models.  Either (a) the rake
-    angle, or (b) both Frv and Fnm, must be specified.  Reverse faulting
-    is characterized by rake angles in the range 30 <= rake <= 150 deg.}
-  \item{Fnm}{Normal style-of-faulting flag (1 for normal faulting, 0
-    otherwise) for the AS08, CB08, and CY08 models.  Either (a) the rake
-    angle, or (b) both Frv and Fnm, must be specified.  Normal faulting
-    is characterized by rake angles in the range -120 <= rake <= -60 deg for
-    the AS08 and CY08 models and -150 <= rake <= -30 deg for the CB08
-    model.}
-  \item{U}{Unspecified style-of-faulting flag for the BA08 model;
-    equal to 1 if the user wishes to perform a generic ground motion
-    calculation when the style of faulting is unspecified, and 0 otherwise.} 
-  \item{RS}{Reverse style-of-faulting flag for the BA08 model;
-    equal to 1 for reverse faulting (30 <= rake <= 150 deg), and 0 otherwise.}
-  \item{NS}{Normal style-of-faulting flag for the BA08 model;
-    equal to 1 for normal faulting (-150 <= rake <= -30 deg), and 0 otherwise.}
-  \item{SS}{Strike-slip style-of-faulting flag for the BA08 model; equal to 1 for
-    strike-slip faulting (when the rake is not in either of the ranges
-    specified for RS or NS), and 0 otherwise.}
-  \item{dip}{Dip angle of the rupture plane (deg).  If left empty (or set
-    negative), the dip is estimated using \code{\link{dip.calc}}.}
-  \item{W}{Down-dip width of rupture plane (km).  If left empty (or set
-    negative), W is estimated using \code{\link{W.calc}}.}
-  \item{Ztor}{Depth to top of rupture (km).  If left empty (or set
-    negative), Ztor is estimated using \code{\link{Ztor.calc}}.}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
-  \item{VsFlag}{Flag variable indicating how Vs30 is obtained; equal
-    to 1 if Vs30 is measured, and 0 if Vs30 is estimated or inferred.}
-  \item{Z1.0}{Depth to Vs = 1.0 km/s (m).  If left empty (or set
-    negative), Z1.0 is estimated using \code{\link{Z1.calc.as}} for the
-    AS08 model and \code{\link{Z1.calc.cy}} for the CY08 model.}
+  \item{VsFlag}{Flag variable indicating how \code{Vs30} is obtained;
+    equal to 1 if \code{Vs30} is measured, and 0 if \code{Vs30} is
+    estimated or inferred.}
+  \item{epsilon}{number of standard deviations to be considered in the
+    calculations.  Use 0 to obtain a median estimate of ground motion.}
+  \item{T}{Spectral period (sec).  Use 0 for PGA, -1 for PGV, and -2 for
+    PGD (CB08 only).  For spectral acceleration, \code{T} must be in the
+    range \code{0.01 <= T <= 10 sec}.  If the specified period is within
+    the allowable range and does not have defined equations, the program
+    uses log-log interpolation (using \code{\link{interpolate}}) between
+    the next-highest and next-lowest spectral periods with defined
+    equations.}  
+  \item{Rrup}{Rupture distance (km):  the closest distance to the
+    rupture plane; if left empty, \code{Rrup} is calculated from
+    \code{Rx}, the source-to-site azimuth, and the geometric rupture
+    parameters (\code{Ztor}, \code{W}, and \code{dip}) using
+    \code{\link{Rrup.calc}}.}
+  \item{Rx}{Site coordinate (km):  The horizontal distance to the
+    surface projection of the top edge of the rupture plane, measured
+    perpendicular to the strike.  If left empty, \code{Rx} is calculated
+    from \code{Rjb}, the source-to-site azimuth, and the geometric
+    rupture parameters (\code{Ztor}, \code{W}, and \code{dip}) using
+    \code{\link{Rx.calc}}.  When only \code{Rjb} and the azimuth are
+    assumed, \code{Rjb} is used to calculate \code{Rx}, which is then
+    used to calculate \code{Rrup}.}
+  \item{dip}{Dip angle of the rupture plane (deg).  If left empty, the
+    dip is estimated using \code{\link{dip.calc}}.}
+  \item{W}{Down-dip width of rupture plane (km).  If left empty,
+    \code{W} is estimated using \code{\link{W.calc}}.}
+  \item{Ztor}{Depth to top of rupture (km).  If left empty, \code{Ztor}
+    is estimated using \code{\link{Ztor.calc}}.}
+  \item{Z1.0}{Depth to Vs = 1.0 km/s (m).  If left empty, \code{Z1.0} is
+    estimated using \code{\link{Z1.calc.as}} for the AS08 model and
+    \code{\link{Z1.calc.cy}} for the CY08 model.}
   \item{Z1.5}{Depth to Vs = 1.5 km/s (m).  Z1.5 is not utilized in
     ground motion calculations, but if available, it may be used to
-    estimate Z2.5 for the CB08 model.}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (km).  If left empty (or set negative),
-    Z2.5 is estimated from Z1.5 or Z1.0 if available, using the
-    recommendations in Campbell and Bozorgnia (2007).  If neither Z1.5 nor
-    Z1.0 is available, then Vs30 is used to estimate Z1.0 using
-    \code{\link{Z1.calc.as}}, which is in turn used to estimate Z2.5.}
-  \item{Fas}{Aftershock flag for AS08; equal to 1 for aftershocks and 0 for
-    mainshocks (the default).}
-  \item{AS}{Aftershock flag for CY08; equal to 1 for aftershocks and 0 for
-    mainshocks (the default).}
+    estimate \code{Z2.5} for the CB08 model.}
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (km).  If left empty, \code{Z2.5}
+    is estimated from \code{Z1.5} or \code{Z1.0} if available, using the
+    recommendations in Campbell and Bozorgnia (2007).  If neither
+    \code{Z1.5} nor \code{Z1.0} is available, then \code{Vs30} is used
+    to estimate \code{Z1.0} using \code{\link{Z1.calc.as}}, which is in
+    turn used to estimate \code{Z2.5}.}
+  \item{rake}{Rake angle of fault movement (deg).  Either the rake angle
+    or the style-of-faulting flag variables (\code{Frv} and \code{Fnm}
+    for AS08, CB08, and CY08; and \code{U}, \code{RS}, \code{NS}, and
+    \code{SS} for BA08) must be specified.}
+  \item{Frv}{Reverse style-of-faulting flag (1 for reverse faulting, 0
+    otherwise) for the AS08, CB08, and CY08 models.  Either (a) the rake
+    angle, or (b) both \code{Frv} and \code{Fnm}, must be specified.
+    Reverse faulting is characterized by rake angles in the range
+    \code{30 <= rake <= 150 deg} for the AS08 and CY08 models, and in
+    the range \code{30 < rake < 150 deg} for the CB08 model.}
+  \item{Fnm}{Normal style-of-faulting flag (1 for normal faulting, 0
+    otherwise) for the AS08, CB08, and CY08 models.  Either (a) the rake
+    angle, or (b) both \code{Frv} and \code{Fnm}, must be specified.
+    Normal faulting is characterized by rake angles in the range
+    \code{-120 <= rake <= -60 deg} for the AS08 and CY08 models and
+    \code{-150 < rake < -30 deg} for the CB08 model.}
+  \item{U}{Unspecified style-of-faulting flag for the BA08 model;
+    equal to 1 if the user wishes to perform a generic ground motion
+    calculation when the style of faulting is unspecified, and 0
+    otherwise.}
+  \item{RS}{Reverse style-of-faulting flag for the BA08 model;
+    equal to 1 for reverse faulting (\code{30 <= rake <= 150 deg}), and
+    0 otherwise.}
+  \item{NS}{Normal style-of-faulting flag for the BA08 model;
+    equal to 1 for normal faulting (\code{-150 <= rake <= -30 deg}), and
+    0 otherwise.}
+  \item{SS}{Strike-slip style-of-faulting flag for the BA08 model; equal
+    to 1 for strike-slip faulting (when the rake is not in either of the
+    ranges specified for RS or NS), and 0 otherwise.}
   \item{Fhw}{Hanging wall flag; equal to 1 for sites on the hanging
-    wall side of the fault (Rx >= 0; azimuth >= 0), and 0 otherwise.}
-  \item{Zhyp}{Hypocentral depth of the earthquake (km).  Zhyp is not
-    utilized in ground motion calculations, but it may be used to estimate
-    Ztor.  See \code{\link{Ztor.calc}} for details.}
+    wall side of the fault (\code{Rx >= 0; azimuth >= 0}), and 0 otherwise.}
   \item{azimuth}{Source-to-site azimuth (deg); see Figure 2 in
     Kaklamanos and Baise (2010) for details.  Used by
     \code{\link{Rx.calc}} and \code{\link{Rrup.calc}} for distance
     calculations.}
+  \item{Zhyp}{Hypocentral depth of the earthquake (km).  \code{Zhyp} is not
+    utilized in ground motion calculations, but it may be used to estimate
+    \code{Ztor}.  See \code{\link{Ztor.calc}} for details.}
+  \item{Fas}{Aftershock flag for AS08; equal to 1 for aftershocks and 0 for
+    mainshocks (the default).}
+  \item{AS}{Aftershock flag for CY08; equal to 1 for aftershocks and 0 for
+    mainshocks (the default).}
   \item{arb}{Flag variable indicating the method of determining aleatory
     uncertainty for the CB08 model; equal to 1 if the standard deviation
     should be calculated for the arbitrary horizontal component of ground
     motion, and 0 if the standard deviation should be calculated for the
     geometric mean horizontal ground motion (the default).}
-  \item{epsilon}{number of standard deviations to be considered in the
-    calculations.  Use 0 to obtain a median estimate of ground motion.}
-  \item{T}{Spectral period (sec).  Use 0 for PGA, -1 for PGV, and -2 for
-    PGD (CB08 only).  For spectral acceleration, T must be in the range
-    0.01 <= T <= 10 sec.  If the specified period is within the
-    allowable range and does not have defined equations, the program
-    uses log-log interpolation (using \code{\link{interpolate}}) between
-    the next-highest and next-lowest spectral periods with defined
-    equations.}
 }
 \value{
   The spectral acceleration (in units of \emph{g}) at period T; peak
-  ground acceleration (PGA, in units of \emph{g}) when T = 0; peak
-  ground velocity (PGV, in units of cm/sec) when T = -1; and peak ground
-  displacement using the CB08 model (PGD, in units of cm) when T = -2
-  sec.
+  ground acceleration (PGA, in units of \emph{g}) when \code{T = 0};
+  peak ground velocity (PGV, in units of cm/sec) when \code{T = -1}; and
+  peak ground displacement using the CB08 model (PGD, in units of cm)
+  when \code{T = -2}.
 }
 \details{
-Note that T (spectral period) can be a vector, while all other arguments are 
-scalars.
+Note that T (spectral period) can be a vector, while all other arguments
+must be scalars.
 }
 \seealso{
-  See \code{\link{Sa.nga}} for a comprehensive function that computes the ground
-  motions from the AS08, BA08, CB08, and CY08 models, and outputs data
-  in a matrix format.  See \code{\link{mainshocks}} for an example of
-  inputting and outputting earthquake data and predictions.
+  See \code{\link{Sa.nga}} for a comprehensive function that computes
+  the ground motions from the AS08, BA08, CB08, and CY08 models, and
+  outputs data in a matrix format.  See \code{\link{mainshocks}} for an
+  example of inputting and outputting earthquake data and predictions.
   
   For details on the sub procedures used for the individual NGA models, see
   \code{\link{subs.as}}, \code{\link{subs.ba}}, \code{\link{subs.cb}},
   and \code{\link{subs.cy}}.  See \code{\link{coefs}} for details on the
   period-independent model coefficients, and \code{\link{coefs.t.as}},
   \code{\link{coefs.t.ba}}, \code{\link{coefs.t.cb}}, and
-  \code{\link{coefs.t.cy}} for details on the period-dependent model coefficients.
+  \code{\link{coefs.t.cy}} for details on the period-dependent model
+  coefficients.
   
   For procedures on estimating input variables when they are not known,
   see \code{\link{Rx.calc}}, \code{\link{Rrup.calc}},
   \code{\link{dip.calc}}, \code{\link{W.calc}}, \code{\link{Ztor.calc}},
-  and \code{\link{Z1.calc}}.
+  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.
 
   For details on the spectral periods and ground motion parameters
   defined for each of the models, see \code{\link{modelPeriods}} or
@@ -195,32 +208,34 @@ Fas <- 0
 
 
 
+####################################################################
 # Example 1:  Illustration of the versatility of input for the Sa
 #             functions (using CY08 as an example)
 
 # Calculate PGA using the known input variables:
-Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake, Fhw = Fhw,
-      dip = dip,  W = W, Ztor = Ztor, Vs30 = Vs30,
-      VsFlag = VsFlag, AS = Fas, epsilon = 0, T = 0)
+Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30, VsFlag = VsFlag,
+      epsilon = 0, T = 0, dip = dip, W = W, Ztor = Ztor,
+      rake = rake, Fhw = Fhw, AS = Fas)
 
 # Alternately, the fault type may be input using the
 # style-of-faulting flag variables:
-Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Frv = 0, Fnm = 0, Fhw = Fhw,
-      dip = dip,  W = W, Ztor = Ztor, Vs30 = Vs30,
-      VsFlag = VsFlag, AS = Fas, epsilon = 0, T = 0)
+Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30, VsFlag = VsFlag,
+      epsilon = 0, T = 0, dip = dip, W = W, Ztor = Ztor,
+      Frv = 0, Fnm = 0, Fhw = Fhw, AS = Fas)
 
 # If the azimuth is known, it may be used in place of Fhw:
-Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Frv = 0, Fnm = 0, azimuth = -20,
-      dip = dip,  W = W, Ztor = Ztor, Vs30 = Vs30,
-      VsFlag = VsFlag, AS = Fas, epsilon = 0, T = 0)
+Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30, VsFlag = VsFlag,
+      epsilon = 0, T = 0, dip = dip, W = W, Ztor = Ztor,
+      Frv = 0, Fnm = 0, azimuth = -20, AS = Fas)
 
-# The variables Rrup, dip, W, and Ztor may be left blank, and their
-# defaults will be used in the calculation:
-Sa.cy(M = M, Rjb = Rjb, Frv = 0, Fnm = 0, azimuth = -20,
-      Vs30 = Vs30, VsFlag = VsFlag, AS = Fas, epsilon = 0, T = 0)
+# The variables Rrup, dip, W, and Ztor may be left blank (or set
+# to NA), and their defaults will be used in the calculation:
+Sa.cy(M = M, Rjb = Rjb, Rrup = NA, Vs30 = Vs30, VsFlag = VsFlag,
+      epsilon = 0, T = 0, Frv = 0, Fnm = 0, azimuth = -20, AS = Fas)
 
 
 
+########################################################################
 # Example 2:  Generate a plot of the predicted response spectrum (and
 #             uncertainty) for a hypothetical earthquake using the AS08
 #             model
@@ -231,17 +246,20 @@ T.list <- modelPeriods(model = "AS08", positive = TRUE)
 
 # Calculations
 # Median
-SaMedian <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake,
-                  Fhw = Fhw, dip = dip, W = W, Ztor = Ztor, Vs30 = Vs30,
-                  VsFlag = VsFlag, Fas = 0, epsilon = 0, T = T.list)
+SaMedian <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                  VsFlag = VsFlag, T = T.list, dip = dip, W = W,
+                  Ztor = Ztor, rake = rake, Fhw = Fhw, Fas = 0,
+                  epsilon = 0)
 # Median + 1 SD
-SaPlus1SD <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake,
-                   Fhw = Fhw, dip = dip, W = W, Ztor = Ztor, Vs30 = Vs30,
-                   VsFlag = VsFlag, Fas = 0, epsilon = 1, T = T.list)
+SaPlus1SD <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                   VsFlag = VsFlag, T = T.list, dip = dip, W = W,
+                   Ztor = Ztor, rake = rake, Fhw = Fhw, Fas = 0,
+                   epsilon = 1)
 # Median - 1 SD
-SaMinus1SD <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake,
-                    Fhw = Fhw, dip = dip, W = W, Ztor = Ztor, Vs30 = Vs30,
-                    VsFlag = VsFlag, Fas = 0, epsilon = -1, T = T.list)
+SaMinus1SD <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                    VsFlag = VsFlag, T = T.list, dip = dip, W = W,
+                    Ztor = Ztor, rake = rake, Fhw = Fhw, Fas = 0,
+                    epsilon = -1)
 
 # Plot
 plot(T.list, SaMedian, type = "p", log = "xy", col = "blue", pch = 19,
@@ -257,25 +275,29 @@ lines(T.list, SaMinus1SD, lwd = 1, col = "red")
 
 
 
+#######################################################################
 # Example 3:  Generate a plot of the median response spectra for the
 #             same hypothetical earthquake, comparing the different
 #             NGA models
 
 # Calculations
 # AS08
-SaAS08 <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake,
-                Fhw = Fhw, dip = dip, W = W, Ztor = Ztor, Vs30 = Vs30,
-                VsFlag = VsFlag, Fas = 0, epsilon = 0, T = T.list)
+SaAS08 <- Sa.as(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                VsFlag = VsFlag, epsilon = 0, T = T.list,
+                dip = dip, W = W, Ztor = Ztor, rake = rake,
+                Fhw = Fhw, Fas = 0)
 # BA08
-SaBA08 <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake,
-                epsilon = 0, T = T.list)
+SaBA08 <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, epsilon = 0,
+                T = T.list, rake = rake)
 # CB08
-SaCB08 <- Sa.cb(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake, dip = dip,
-                Ztor = Ztor, Vs30 = Vs30, epsilon = 0, T = T.list)
+SaCB08 <- Sa.cb(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                epsilon = 0, T = T.list, dip = dip, Ztor = Ztor,
+                rake = rake)
 # CY08
-SaCY08 <- Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake, Fhw = Fhw,
-                dip = dip,  W = W, Ztor = Ztor, Vs30 = Vs30,
-                VsFlag = VsFlag, AS = Fas, epsilon = 0, T = T.list)
+SaCY08 <- Sa.cy(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
+                VsFlag = VsFlag, epsilon = 0, T = T.list,
+                dip = dip, W = W, Ztor = Ztor, rake = rake,
+                Fhw = Fhw, AS = 0)
 
 # Plot
 plot(T.list, SaAS08, type = "l", log = "xy", col = "blue", pch = 19, lwd = 2,

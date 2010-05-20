@@ -8,8 +8,9 @@
   models.
 
   The function \code{getPeriod} determines whether or not a
-  given period T has defined coefficients.  If not, the function returns
-  the next-highest and next-lowest periods with defined coefficients.
+  given period \code{T} has defined coefficients.  If not, the function
+  returns the next-highest and next-lowest periods with defined
+  coefficients.
 }
 \usage{
 modelPeriods(model, positive = FALSE)
@@ -21,8 +22,9 @@ getPeriod(T, model)
     \code{"CY08"}.}
   \item{positive}{logical value (\code{TRUE} or \code{FALSE}) indicating
     whether or not to return only positive periods (i.e., spectral
-    periods 0.01 sec and greater), excluding PGA (T = 0 s), PGV (T = -1
-    s), and PGD (T = -2 s, in the case of CB08) from the list.}
+    periods 0.01 sec and greater), excluding PGA (\code{T = 0}), PGV
+    (\code{T = -1}), and PGD (\code{T = -2}, in the case of CB08) from the
+    list.}
   \item{T}{spectral period at which the ground motion calculation is to
     be performed (sec)} 
 }
@@ -31,24 +33,24 @@ getPeriod(T, model)
   \code{\link{periods.as},} \code{\link{periods.ba},}
   \code{\link{periods.cb},} and \code{\link{periods.cy}.}  The purpose
   of the \code{positive} argument is to separate spectral
-  acceleration (which is a continuous function of T) from PGA, PGV, and
-  PGD.  This is useful for interpolation purposes (only Sa may be
-  interpolated) and for plotting the predicted response spectra.
+  acceleration (which is a continuous function of \code{T}) from PGA,
+  PGV, and PGD.  This is useful for interpolation purposes (only Sa may
+  be interpolated) and for plotting the predicted response spectra.
 }
 \value{
   \code{modelPeriods} returns a vector of periods that have defined
   coefficients for the specified NGA model (sec).
-
+  
   
   \code{getPeriods} returns a three-element list with components
   \code{interp,} \code{lower,} and \code{upper}:
   \tabular{lll}{
        \tab  \code{interp} \tab a logical value indicating whether or not
-       interpolation is necessary given the spectral period T \cr
-       \tab  \code{lower} \tab gives the greatest period less than T that has
-       defined model coefficients (if \code{interp = TRUE}) \cr
-       \tab  \code{upper} \tab gives the smallest period greater than T that has
-       defined model coefficients (if \code{interp = TRUE})
+       interpolation is necessary given the spectral period \code{T} \cr
+       \tab  \code{lower} \tab gives the greatest period less than
+       \code{T} that has defined model coefficients (if \code{interp = TRUE}) \cr
+       \tab  \code{upper} \tab gives the smallest period greater than
+       \code{T} that has defined model coefficients (if \code{interp = TRUE})
   }
   If \code{interp = FALSE}, then \code{lower} and \code{upper} contain
   null values.

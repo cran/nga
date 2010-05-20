@@ -35,28 +35,29 @@
 # INPUT PARAMETERS FOR THE FUNCTIONS BELOW:
 #   M = Moment magnitude
 #   Rjb = Joyner-Boore distance (km)
+#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
+#   VsFlag = Flag variable indicating how Vs30 is obtained
+#            (1 if measured, 0 if estimated/inferred)
+#   epsilon = number of standard deviations to be considered in the calculations
+#   T = Spectral period, sec (0 for PGA; -1 for PGV)
 #   Rrup = Rupture distance (km)
 #   Rx = Site coordinate (km)
-#   rake = Rake angle of fault movement (deg)
 #   dip = Fault dip (deg)
 #   W = Down-dip rupture width (km)
 #   Ztor = Depth to top of rupture (km)
-#   Vs30 = Time-averaged shear wave velocity over 30 m subsurface depth  (m/sec)
 #   Z1.0 = Depth to Vs = 1.0 km/sec  (m)
-#   VsFlag = Flag variable indicating how Vs30 is obtained
-#            (1 if measured, 0 if estimated/inferred)
+#   rake = Rake angle of fault movement (deg)
 #   Frv = Reverse style-of-faulting flag (1 for reverse faulting,
 #         0 otherwise); calculated from rake
 #   Fnm = Normal style-of-faulting flag (1 for normal faulting,
 #         0 otherwise); calculated from rake
-#   Fas = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   Fhw = Hanging wall flag (1 for site on hanging wall side of fault,
 #         0 otherwise); calculated from azimuth or Rx (if provided)
-#   Zhyp = hypocentral depth (km)
 #   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
+#   Zhyp = hypocentral depth (km)
+#   Fas = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   PGA1100 = median PGA when Vs30 = 1100 m/s
-#   epsilon = number of standard deviations to be considered in the calculations
-#   T = Spectral period, sec (0 for PGA; -1 for PGV)
+
 
 # OUTPUT PARAMETERS (from Sa function):
 #   Sa = Spectral acceleration (g)
@@ -399,23 +400,16 @@ f4.as <- function(Rjb, Rx, dip, Ztor, M, W, T) {
       }
     }
     
-    # T5 (Eqn 12)
-    if(dip >= 70) {
-      T5 <- 1 - (dip - 70)/20
+    # T5 (Eqn 12 in Abrahamson and Silva (2008), modified by Eqn 5 in
+    # Abrahamson and Silva (2009), errata to the AS08 model
+
+    if(dip >= 30) {
+      T5 <- 1 - (dip - 30)/60
     } else {
-      if(dip < 70) {
+      if(dip < 30) {
         T5 <- 1
       }
-    }
-    
-    # T5 (computed from Eqn 5 in Errata)
-    #if(dip >= 30) {
-    #  T5 <- 1 - (dip - 30)/60
-    #} else {
-    #  if(dip < 30) {
-    #    T5 <- 1
-    #  }
-    #}  
+    }  
   
     # Return f4 (Eqn 7)
     return(a14.as(T)*T1*T2*T3*T4*T5)
@@ -781,17 +775,18 @@ SaMedian.as <- function(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, Fas, Fhw, dip, Vs30, Z
 
 
 # 5. FINAL FUNCTION FOR AS08 GROUND MOTION CALCULATIONS
-Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
-                  Fhw = NA, dip = NA, W = NA, Ztor = NA, Vs30, Z1.0 = NA,
-                  VsFlag, Fas = 0, Zhyp = NA, azimuth = NA, epsilon, T){
+Sa.as <- function(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
+                  dip = NA, W = NA, Ztor = NA, Z1.0 = NA, rake = NA, Frv = NA,
+                  Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, Fas = 0){
 
   # If T is a vector, perform calculation for each of the elements
   if(length(T) > 1) {
-    return(sapply(T, Sa.as, M = M, Rjb = Rjb, Rrup = Rrup, Rx = Rx, rake = rake,
-                  Frv = Frv, Fnm = Fnm, Fhw = Fhw, dip = dip, W = W, Ztor = Ztor,
-                  Vs30 = Vs30, Z1.0 = Z1.0, VsFlag = VsFlag, Fas = Fas, Zhyp = Zhyp,
-                  azimuth = azimuth, epsilon = epsilon))
-  
+    return(sapply(T, Sa.as, M = M, Rjb = Rjb, Vs30 = Vs30, VsFlag = VsFlag,
+                  epsilon = epsilon, Rrup = Rrup, Rx = Rx, dip = dip, W = W,
+                  Ztor = Ztor, Z1.0 = Z1.0, rake = rake, Frv = Frv, Fnm = Fnm,
+                  Fhw = Fhw, azimuth = azimuth, Zhyp = Zhyp, Fas = Fas))
+
+    
   # Perform calculation for single value of T:
   } else {
 
@@ -811,6 +806,20 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
       stop("epsilon must be numeric")
     if(is.na(Fas) == TRUE | !(Fas == 1 | Fas == 0))
       stop("Fas must be either 1 (for aftershocks) or 0 (for mainshocks, the default)")
+
+    # Check optional distance, source, and site parameters
+    if(is.na(Rrup) == FALSE & Rrup < 0)
+      stop("Rrup must be a non-negative number; use NA if unknown.")
+    if(is.na(dip) == FALSE & (dip <= 0 | dip > 90))
+      stop("dip must be be greater than 0 and less than or equal to 90 deg; use NA if unknown.")
+    if(is.na(W) == FALSE & W < 0)
+      stop("W must be a non-negative number; use NA if unknown")
+    if(is.na(Ztor) == FALSE & Ztor < 0)
+      stop("Ztor must be a non-negative number; use NA if unknown.")
+    if(is.na(Z1.0) == FALSE & Z1.0 < 0)
+      stop("Z1.0 must be a non-negative number; use NA if unknown.")
+    if(is.na(Zhyp) == FALSE & Zhyp < 0)
+      stop("Zhyp must be a non-negative number; use NA if unknown.")
 
     # Check style of faulting parameters
     if(is.na(rake) == TRUE & (is.na(Frv) == TRUE | is.na(Fnm) == TRUE))
@@ -840,7 +849,7 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
              "Frv = 0 and Fnm = 0 for strike-slip faulting.")
     }
 
-    # Check hanging wall parameters
+   # Check hanging wall parameters
     if(is.na(azimuth) == TRUE & is.na(Fhw) == TRUE & is.na(Rx) == TRUE)
       stop("At least one of Rx, azimuth, and Fhw must be specified")
     if(is.na(azimuth) == FALSE & abs(azimuth) > 180)
@@ -849,22 +858,26 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
       stop("Fhw must be either 1 (for sites on the hanging wall side of the fault)", "\n",
            "or 0 (for sites on the footwall side of the fault)")
     # Ensure consistency between Rx, azimuth, and Fhw
-    if(is.na(azimuth) == FALSE & is.na(Fhw) == FALSE){
-      if(azimuth < 0 & Fhw == 1)
-        stop("Inconsistency between azimuth and Fhw. Fhw must be 0 when azimuth < 0.")
-      if(azimuth > 0 & Fhw == 0)
-        stop("Inconsistency between azimuth and Fhw. Fhw must be 1 when azimuth > 0.")
-    }
-    if(is.na(Rx) == FALSE & is.na(Fhw) == FALSE){
-      if(Rx < 0 & Fhw == 1)
-        stop("Inconsistency between Rx and Fhw. Fhw must be 0 when Rx < 0.")
-      if(Rx > 0 & Fhw == 0)
-        stop("Inconsistency between Rx and Fhw. Fhw must be 1 when Rx > 0.")
+    if(is.na(dip) == FALSE & dip != 90){
+      if(is.na(azimuth) == FALSE & is.na(Fhw) == FALSE){
+        if(azimuth < 0 & Fhw == 1)
+          stop("Inconsistency between azimuth and Fhw. Fhw must be 0 when azimuth < 0.")
+        if(azimuth > 0 & Fhw == 0)
+          stop("Inconsistency between azimuth and Fhw. Fhw must be 1 when azimuth > 0.")
+      }
+      if(is.na(Rx) == FALSE & is.na(Fhw) == FALSE){
+        if(Rx < 0 & Fhw == 1)
+          stop("Inconsistency between Rx and Fhw. Fhw must be 0 when Rx < 0.")
+        if(Rx > 0 & Fhw == 0)
+          stop("Inconsistency between Rx and Fhw. Fhw must be 1 when Rx > 0.")
+      }
     }
     if(is.na(Rx) == FALSE & is.na(azimuth) == FALSE){
       if(!(Rx <= 0 & azimuth <= 0) & !(Rx >= 0 & azimuth >= 0))
         stop("Rx and azimuth must have the same sign.")
     }
+
+
 
 
     # 5B. OBTAIN ESTIMATES OF UNSPECIFIED INPUT PARAMETERS
@@ -899,16 +912,21 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
     }
     
     # Dip angle
-    if(is.na(dip) == TRUE | dip < 0)
+    if(is.na(dip) == TRUE)
       dip <- dip.calc(rake)
 
     # Down-dip rupture width, W
-    if(is.na(W) == TRUE | W < 0)
+    if(is.na(W) == TRUE)
       W <- W.calc(M, rake)
-
+    
     # Depth to top of rupture, Ztor
-    if(is.na(Ztor) == TRUE | Ztor < 0)
-      Ztor <- Ztor.calc(Zhyp, W, dip, M, rake)
+    if(is.na(Ztor) == TRUE){
+      # Hypocentral depth, Zhyp (used for calculating Ztor)
+      if(is.na(Zhyp) == TRUE)
+        Zhyp <- Zhyp.calc(M, rake)
+      # Calculation of Ztor
+      Ztor <- Ztor.calc(W, dip, Zhyp)
+    }
 
     # Determine hanging wall flag, Fhw
       # Calculate from azimuth if provided
@@ -926,6 +944,9 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
             Fhw <- 0
         }
       }
+      # For the special case of vertical fault, ensure that Fhw = 0
+      if(dip == 90)
+        Fhw <- 0
 
     # Azimuth angle
     if(is.na(azimuth) == TRUE){
@@ -936,17 +957,22 @@ Sa.as <- function(M, Rjb, Rrup = NA, Rx = NA, rake = NA, Frv = NA, Fnm = NA,
       else if(Fhw == 0)
         azimuth <- -50
     }
-
+    # Ensure that azimuth = 90 for Rjb = 0
+    if(Rjb == 0){
+      Fhw <- 1
+      azimuth <- 90
+    }
+      
     # Site coordinate, Rx
     if(is.na(Rx) == TRUE)
       Rx <- Rx.calc(Rjb, Ztor, W, dip, azimuth, Rrup)
   
     # Rupture distance, Rrup
-    if(is.na(Rrup) == TRUE | Rrup < 0)
+    if(is.na(Rrup) == TRUE)
       Rrup <- Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb)
 
     # Depth parameter, Z1.0
-    if(is.na(Z1.0) == TRUE | Z1.0 < 0)
+    if(is.na(Z1.0) == TRUE)
       Z1.0 <- Z1.calc.as(Vs30)
 
     

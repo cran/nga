@@ -18,14 +18,15 @@ periods.cy(positive = FALSE)
 \arguments{
   \item{positive}{logical value (\code{TRUE} or \code{FALSE}) indicating
     whether or not to return only positive periods (i.e., spectral
-    periods 0.01 sec and greater), excluding PGA (T = 0 s), PGV (T = -1
-    s), and PGD (T = -2 s, in the case of CB08) from the list.}
+    periods 0.01 sec and greater), excluding PGA (\code{T = 0}), PGV
+    (\code{T = -1}), and PGD (\code{T = -2}, in the case of CB08) from the
+    list.}
 }
 \details{
   The purpose of the \code{positive} argument is to separate spectral
-  acceleration (which is a continuous function of T) from PGA, PGV, and
-  PGD.  This is useful for interpolation purposes (only Sa may be
-  interpolated) and for plotting the predicted response spectra.
+  acceleration (which is a continuous function of \code{T}) from PGA,
+  PGV, and PGD.  This is useful for interpolation purposes (only Sa may
+  be interpolated) and for plotting the predicted response spectra.
   \tabular{ll}{
     \code{periods.as} \tab Returns an array of periods for the AS08
     model. \cr

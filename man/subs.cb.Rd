@@ -42,14 +42,14 @@ SaMedian.cb(M, Rjb, Rrup, Ztor, Frv, Fnm, dip, Vs30, Z2.5, T)
     (km).}
   \item{Ztor}{Depth to top of rupture (km).}
   \item{Frv}{Reverse style-of-faulting flag; equal to 1 for reverse
-    faulting (30 <= rake <= 150 deg), and 0 otherwise.}
+    faulting (\code{30 < rake < 150 deg}), and 0 otherwise.}
   \item{Fnm}{Normal style-of-faulting flag; equal to 1 for normal
-    faulting (-150 <= rake <= -30 deg), and 0 otherwise.}
+    faulting (\code{-150 < rake < -30 deg}), and 0 otherwise.}
   \item{dip}{Fault dip angle (deg).}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
   \item{Z2.5}{Depth to Vs = 2.5 km/s (km).}
-  \item{A1100}{Median PGA when Vs30 = 1100 m/s (g).}
+  \item{A1100}{Median PGA when \code{Vs30 = 1100 m/s} (g).}
   \item{T}{Spectral period (sec). Use 0 for PGA, -1 for PGV, and -2 for PGD.}
 }
 \details{
@@ -61,14 +61,14 @@ SaMedian.cb(M, Rjb, Rrup, Ztor, Frv, Fnm, dip, Vs30, Z2.5, T)
     \code{Fsite.cb} \tab Shallow site response term (Eqn 11).\cr
     \code{Fsed.cb} \tab Basin response term (Eqn 12).\cr
     \code{Alpha.cb} \tab Partial derivative of site response function (\code{Fsite.cb})
-    with respect to A1100 (Eqn 17).\cr
+    with respect to \code{A1100} (Eqn 17).\cr
     \code{Sigma.cb} \tab Intra-event standard deviation (Eqn 15).\cr
     \code{Tau.cb} \tab Inter-event standard deviation (Eqn 14).\cr
     \code{SigmaTot.cb} \tab Total standard deviation of the geometric
     mean horizontal component of LnY (Eqn 16).\cr
     \code{SigmaArb.cb} \tab Total standard deviation of the arbitrary
     horizontal component of LnY (Eqn 18).\cr
-    \code{A1100.cb} \tab Calculation of median PGA when Vs30 = 1100 m/s\cr
+    \code{A1100.cb} \tab Calculation of median PGA when \code{Vs30 = 1100 m/s}\cr
     \code{SaMedian.cb} \tab Median estimate of ground motion (Eqn 1).
   }
 }

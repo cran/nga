@@ -2,10 +2,10 @@
 \alias{W.calc}
 \title{Estimation of Down-Dip Rupture Width, W}
 \description{
-  Estimates the down-dip rupture width (W) from the moment magnitude of
-  the earthquake (M) using the empirical correlations published in Wells
-  and Coppersmith (1994), for strike-slip, normal, and reverse faulting
-  mechanisms.
+  Estimates the down-dip rupture width (\code{W}) from the moment
+  magnitude of the earthquake (\code{M}) using the empirical
+  correlations published in Wells and Coppersmith (1994), for
+  strike-slip, normal, and reverse faulting mechanisms.
 }
 \usage{
 W.calc(M, rake)
@@ -15,7 +15,7 @@ W.calc(M, rake)
   \item{rake}{Rake angle of fault movement (deg).}
 }
 \value{
-  Estimated down-dip width of the rupture plane, W (km).
+  Estimated down-dip width of the rupture plane, \code{W} (km).
 }
 \seealso{
   \code{\link{Ztor.calc}}, \code{\link{dip.calc}}, \code{\link{Sa}},

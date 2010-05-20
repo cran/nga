@@ -3,10 +3,11 @@
 \alias{Rrup.calc}
 \title{Calculation of Source-to-Site Distance Measures}
 \description{
-  Calculates the values of the rupture distance (Rrup) and
-  site coordinate (Rx) from the other distance parameters and the
+  Calculates the values of the rupture distance (\code{Rrup}) and
+  site coordinate (\code{Rx}) from the other distance parameters and the
   geometric source characteristics of the fault rupture.  The equations
-  for Rx and Rrup are derived and explained in Kaklamanos and Baise (2010).
+  for \code{Rx} and \code{Rrup} are derived and explained in Kaklamanos
+  and Baise (2010).
 }
 \usage{
 Rx.calc(Rjb, Ztor, W, dip, azimuth, Rrup = NA)
@@ -27,33 +28,36 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
     Kaklamanos and Baise (2010).}
 }
 \details{
-  The distance functions for Rx and Rrup require that the Joyner-Boore
-  distance (Rjb) be known.  The source-to-site azimuth is also a
-  necessary argument; if the exact azimuth is unknown, assume a
-  generic value of 50 degrees for sites on the hanging wall side of
-  the fault and -50 degrees for sites on the footwall side of the fault.
-  The geometric source parameters Ztor, W, and dip are also required;
-  for methods of estimating these source parameters
-  when they are not known beforehand, see \code{\link{Ztor.calc},}
+  The distance functions for \code{Rx} and \code{Rrup} require that the
+  Joyner-Boore distance (\code{Rjb}) be known.  The source-to-site
+  azimuth is also a necessary argument; if the exact azimuth is unknown,
+  assume a generic value of 50 degrees for sites on the hanging wall
+  side of the fault and -50 degrees for sites on the footwall side of
+  the fault.  An analysis of the database used to derive the NGA
+  relations suggests that these values are reasonable.  The geometric
+  source parameters \code{Ztor}, \code{W}, and \code{dip} are also
+  required; for methods of estimating these source parameters when they
+  are not known beforehand, see \code{\link{Ztor.calc},}
   \code{\link{W.calc},} and \code{\link{dip.calc},} respectively.
   
-  A general strategy for calculating distances is to first calculate Rx,
-  and then calculate Rrup using Rx.   In order to calculate Rx using
-  the function \code{Rx.calc}, the argument Rrup is only necessary when
-  the site is located directly over the ruptured area (Rjb = 0).  If
-  Rrup is unknown in this case, then the function assumes that the site
-  is located in the middle of the surface projection of the ruptured
-  area.  In the function \code{Rrup.calc}, the argument Rjb is only
-  necessary in the rare case that the site is located directly on the
-  surface projection of fault strike (azimuth = 0, 180, or -180).
+  A general strategy for calculating distances is to first calculate
+  \code{Rx}, and then calculate \code{Rrup} using \code{Rx}.  In order
+  to calculate \code{Rx} using the function \code{Rx.calc}, the argument
+  \code{Rrup} is only necessary when the site is located directly over
+  the ruptured area (\code{Rjb = 0}).  If \code{Rrup} is unknown in this
+  case, then the function assumes that the site is located in the middle
+  of the surface projection of the ruptured area.  In the function
+  \code{Rrup.calc}, the argument \code{Rjb} is only necessary in the
+  rare case that the site is located directly on the surface projection
+  of fault strike (\code{azimuth = 0, 180,} or \code{-180}).
 }
 \value{
-  \code{Rx.calc} outputs Rx (the \dQuote{site coordinate}),
+  \code{Rx.calc} outputs \code{Rx} (the \dQuote{site coordinate}),
   the horizontal distance to the surface projection of the top edge of
   the rupture plane, measured perpendicular to the strike (km).
   
-  \code{Rrup.calc} outputs Rrup (the \dQuote{rupture distance}), the closest
-  distance to the rupture plane (km).
+  \code{Rrup.calc} outputs \code{Rrup} (the \dQuote{rupture distance}),
+  the closest distance to the rupture plane (km).
 }
 \seealso{
   \code{\link{Ztor.calc}}, \code{\link{W.calc}}, \code{\link{dip.calc}},
@@ -67,13 +71,13 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
   \emph{Seismological Research Letters} (in review).
 }
 \examples{
+#########################################################################
 # Example 1:  Calculate the distance measures for the synthetic example
 #             presented in Kaklamanos and Baise (2010), Rjb = 5
 
 # Assumed source and location parameters
 M <- 6
 Rjb <- 5
-# Rjb <- seq(from = 0, to = 200, by = 1)
 azimuth <- 15
 rake <- 90   # Reverse fault
 
@@ -85,7 +89,11 @@ W
 dip <- dip.calc(rake = rake)
 dip
 
-Ztor <- Ztor.calc(W = W, dip = dip, M = M, rake = rake)
+Zhyp <- Zhyp.calc(M = M, rake = rake)
+Zhyp
+# Zhyp is needed in order to estimate Ztor
+
+Ztor <- Ztor.calc(W = W, dip = dip, Zhyp = Zhyp)
 Ztor
 
 
@@ -100,7 +108,7 @@ Rrup
 
 
 
-
+#########################################################################
 # Example 2:  Calculate the distance measures for the synthetic example
 #             presented in Kaklamanos and Baise (2010), for values of
 #             Rjb ranging from 0 to 100

@@ -5,9 +5,10 @@
 # 1. Interpolation of spectral acceleration
 # 2. Calculation of distance measures (Rx and Rrup)
 # 3. Calculation of depth parameter, Z1.0
-# 4. Calculation of depth to top of rupture, Ztor
-# 5. Calculation of dip angle
-# 6. Calculation of down-dip width, W
+# 4. Calculation of hypocentral depth, Zhyp
+# 5. Calculation of depth to top of rupture, Ztor
+# 6. Calculation of dip angle
+# 7. Calculation of down-dip width, W
 
 
 
@@ -58,7 +59,7 @@ getPeriod <- function(T, model){
   if(T %in% modelPeriods(model, 0)){
     interp <- FALSE  # interpolation not necessary
   } else {
-    if(T <= 0.01 | T > 10){  # period not within allowable range
+    if(T < 0.01 | T > 10){  # period not within allowable range
       stop("spectral period not within allowable range.")
     } else{
       interp <- TRUE  # period OK; interpolation is necessary
@@ -122,8 +123,12 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
   # Define angles in terms of radians
   d <- dip*pi/180
   a <- azimuth*pi/180
-  
-  if(azimuth == 90){
+
+
+  # Non-vertical faults
+  if(dip != 90){
+
+    if(azimuth == 90 | Rjb == 0){
 
       # Rjb > 0
       # Case 6 in Figure 3 (Eqn 5)
@@ -132,12 +137,12 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
 
       # Rjb = 0
       else if(Rjb == 0){
-             
-        # If Rrup is known...
-        if(!(is.na(Rrup) == TRUE | Rrup < 0)){
+        
+        # If Rrup is known, then calculate Rx from Rrup
+        if(is.na(Rrup) == FALSE){
           # Case 5A in Figure 3 (Eqn 6)
           if(Rrup < Ztor*sec(d))
-             Rx <- sqrt(Rrup^2 - Ztor^2)
+            Rx <- sqrt(Rrup^2 - Ztor^2)
           # Case 5B (Eqn 7)
           else{
             if(Rrup >= Ztor*sec(d))
@@ -152,26 +157,34 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
       }
 
     } else{
-      if(azimuth >= 0 & azimuth <= 180 & azimuth != 90) {
+      if(azimuth >= 0 & azimuth != 90) {
         
         # Cases 2 and 8 (Eqn 3)
         if(Rjb*abs(tan(a)) <= W*cos(d)){
           Rx <- Rjb*abs(tan(a))
 
         # Cases 3 and 9 (Eqn 4)
-        }else{
+        } else{
           if(Rjb*abs(tan(a)) > W*cos(d)){
             Rx <- Rjb*tan(a)*cos(a - asin(W*cos(d)*cos(a)/Rjb)) }
         }
       
       # Cases 1, 4, and 7 (Eqn 8)
       } else{
-        if(azimuth >= -180 & azimuth < 0){
-          Rx <- Rjb*sin(a) }
+        if(azimuth >= -180 & azimuth < 0)
+          Rx <- Rjb*sin(a)
       }
     }
+
+  # Special case for vertical faults
+  } else{
+    if(dip == 90)
+      Rx <- Rjb*sin(a)
+  }
+    
   return(Rx)
 }
+
 
 
 # Function for Rupture Distance, Rrup
@@ -226,8 +239,8 @@ Rrup.calc <- function(Rx, Ztor, W, dip, azimuth, Rjb = NA) {
   # Eqn 14
   } else{
     if(azimuth == 0 | azimuth == 180 | azimuth == -180){
-      if(is.na(Rjb) == TRUE | Rjb < 0)
-        stop("Rjb must be a positive number")
+      if(is.na(Rjb) == TRUE)
+        stop("Rjb must be specified")
       else
         Ry <- Rjb
       
@@ -269,7 +282,7 @@ Z1.calc.as <- function(Vs30) {
   }
 
   # Calculate Z1.0
-  exp(LnZ1.0)
+  return(exp(LnZ1.0))
 }
 
 
@@ -282,65 +295,59 @@ Z1.calc.cy <- function(Vs30) {
   
   # Calculate Z1.0
   LnZ1.0 <- 28.5 - (3.82/8)*log(Vs30^8 + 378.7^8)
-  exp(LnZ1.0)
+  return(exp(LnZ1.0))
 }
 
 
 
 
+# 4. CALCULATION OF HYPOCENTRAL DEPTH, Zhyp
 
-# 4. CALCULATION OF DEPTH TO TOP OF RUPTURE, Ztor
-
-Ztor.calc <- function(Zhyp = NA, W, dip, M = NA, rake = NA) {
+Zhyp.calc <- function(M, rake) {
 
   # Check input
-  if(is.na(W) == TRUE | is.na(dip) == TRUE |
-     (is.na(Zhyp) == TRUE & (is.na(M) == TRUE | is.na(rake) == TRUE)))
-    stop("W and dip must be specified, as well as either (1) Zhyp, or (2) M and rake,",
-         "\n", "which are used to estimate Zhyp if Zhyp is unspecified.")
+  if(is.na(M) == TRUE | M < 0)
+    stop("M must be a positive number")
+  if(is.na(rake) == TRUE | abs(rake) > 180)
+    stop("rake angle must be between -180 and 180, inclusive")
 
-  # Estimate Zhyp from M and rake if Zhyp is unspecified, using
-  # correlations in Scherbaum et al (2004)
-  if(is.na(Zhyp) == TRUE){
-
-    # Strike-slip fault (SS)
-    if(abs(rake) < 30 | abs(rake) > 150){
-      Zhyp <- 5.63 + 0.68*M
-
-    # Shallow-dipping fault (SHD)  
-    } else{
-      Zhyp <- 11.24 - 0.2*M
-    }
+  # Estimate Zhyp from M and rake, using correlations in Scherbaum et al (2004)
+  # Strike-slip fault (SS)
+  if(abs(rake) < 30 | abs(rake) > 150){
+    Zhyp <- 5.63 + 0.68*M
+  # Shallow-dipping fault (SHD)  
+  } else{
+    Zhyp <- 11.24 - 0.20*M
   }
+  return(Zhyp)
+}
+
+
+ 
+
+# 5. CALCULATION OF DEPTH TO TOP OF RUPTURE, Ztor
+
+Ztor.calc <- function(W, dip, Zhyp) {
+
+  # Check input
+  if(is.na(W) == TRUE | W < 0)
+    stop("W must be a non-negative number")
+  if(is.na(dip) == TRUE | dip <= 0 | dip > 90)
+      stop("dip must be be greater than 0 and less than or equal to 90 deg")
+  if(is.na(Zhyp) == TRUE | Zhyp < 0)
+    stop("Zhyp must be a non-negative number; use NA if unknown.")
 
   # Calculate Ztor from Zhyp, by assuming that the
   # hypocenter is located 60% down the fault width
   Ztor <- max(Zhyp - 0.6*W*sin(dip*pi/180), 0)
-  
-
-  # ALTERNATE METHOD (currently not implemented)
-  # If Zhyp has not been provided, estimate Ztor from M using the basic
-  # equation derived from the correlation suggested by Campbell et al. (2009)
-  #  } else {
-  #    if(M < 8){
-  #      Ztor <- 0.5*M^2 - 8.5*M + 36
-  #    } else{
-  #      if(M >= 8){
-  #        Ztor <- 0
-  #      }
-  #    }
-  #  }
-    
   return(Ztor)
 }
 
 
 
 
-  
 
-
-# 5. DETERMINATION OF DIP ANGLE
+# 6. DETERMINATION OF DIP ANGLE
 
 dip.calc <- function(rake) {
 
@@ -370,7 +377,7 @@ dip.calc <- function(rake) {
 
 
 
-# 6. CALCULATION OF DOWN-DIP RUPTURE WIDTH, W
+# 7. CALCULATION OF DOWN-DIP RUPTURE WIDTH, W
 
 W.calc <- function(M, rake){
 

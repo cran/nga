@@ -47,21 +47,23 @@ SaMedian.as(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, Fas, Fhw, dip, Vs30, Z1.0, W, T)
     strike; site coordinate (km).}
   \item{Ztor}{Depth to top of rupture (km).}
   \item{Frv}{Reverse style-of-faulting flag; equal to 1 for reverse
-    faulting (30 <= rake <= 150 deg), and 0 otherwise.}
+    faulting (\code{30 <= rake <= 150 deg}), and 0 otherwise.}
   \item{Fnm}{Normal style-of-faulting flag; equal to 1 for normal
-    faulting (-120 <= rake <= -60 deg), and 0 otherwise.}
+    faulting (\code{-120 <= rake <= -60 deg}), and 0 otherwise.}
   \item{Fas}{Aftershock flag; equal to 1 for aftershocks and 0 for
     mainshocks.}
   \item{Fhw}{Hanging wall flag; equal to 1 for sites on the hanging
-    wall side of the fault (Rx >= 0 and dip != 90), and 0 otherwise.}
+    wall side of the fault (\code{Rx >= 0} and \code{dip != 90}), and 0
+    otherwise.}
   \item{dip}{Fault dip angle (deg).}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
-  \item{VsFlag}{Flag variable indicating how Vs30 is obtained; equal
-    to 1 if Vs30 is measured, and 0 if Vs30 is estimated or inferred.}
+  \item{VsFlag}{Flag variable indicating how \code{Vs30} is obtained;
+    equal to 1 if \code{Vs30} is measured, and 0 if \code{Vs30} is
+    estimated or inferred.}
   \item{Z1.0}{Depth to Vs = 1.0 km/s (m).}
   \item{W}{Down-dip rupture width (km).}
-  \item{PGA1100}{Median PGA when Vs30 = 1100 m/s (g).}
+  \item{PGA1100}{Median PGA when \code{Vs30 = 1100 m/s} (g).}
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{
@@ -69,12 +71,13 @@ SaMedian.as(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, Fas, Fhw, dip, Vs30, Z1.0, W, T)
     \code{f1.as} \tab Base model (Eqns 2 and 3 of Abrahamson and Silva
     (2008)).\cr
     \code{f5.as} \tab Site response model (Eqns 4 to 6).\cr
-    \code{f4.as} \tab Hanging wall model (Eqns 7 to 12).\cr
+    \code{f4.as} \tab Hanging wall model (Eqns 7 to 12); Eqn 12 modified
+    in Abrahamson and Silva (2009).\cr
     \code{f6.as} \tab Depth to top of rupture model (Eqn 13).\cr
     \code{f8.as} \tab Large distance model (Eqns 14 and 15).\cr
     \code{f10.as} \tab Soil depth model (Eqns 16 to 20).\cr
     \code{Alpha.as} \tab Partial derivative of site response function (\code{f5.as})
-    with respect to PGA1100 (Eqn 26; corrected in Abrahamson and Silva
+    with respect to \code{PGA1100} (Eqn 26; corrected in Abrahamson and Silva
     (2009)).\cr
     \code{Sigma0.as} \tab Intra-event standard deviation of the observed
     ground motion for the linear site response range (Eqn 27).\cr
@@ -84,7 +87,7 @@ SaMedian.as(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, Fas, Fhw, dip, Vs30, Z1.0, W, T)
     corrected in Abrahamson and Silva (2009)).\cr
     \code{Tau.as} \tab Inter-event standard deviation (Eqn 25).\cr
     \code{SigmaTot.as} \tab Total standard deviation. \cr
-    \code{PGA1100.as} \tab Calculation of median PGA when Vs30 = 1100 m/s\cr
+    \code{PGA1100.as} \tab Calculation of median PGA when \code{Vs30 = 1100 m/s}\cr
     \code{SaMedian.as} \tab Median estimate of ground motion (Eqn 1).
   }
 }

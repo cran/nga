@@ -18,58 +18,61 @@ data(mainshocks)
   details about these columns, see the documentation for the NGA
   flatfile.
   \tabular{lll}{
-    1. \tab RecNum \tab Record sequence number in the NGA flatfile  \cr
-    2. \tab EQID \tab Earthquake identification number in the NGA flatfile  \cr
-    3. \tab EQName \tab Earthquake name \cr
-    4. \tab Year \tab Year of the earthquake \cr
-    5. \tab MoDay \tab Month and day of the earthquake \cr
-    6. \tab StationName \tab Name of the strong-motion station \cr
-    7. \tab StaSeqNum \tab Sequence number of the strong-motion station \cr
-    8. \tab StaID \tab Identification number of the strong-motion
+    1. \tab \code{RecNum} \tab Record sequence number in the NGA flatfile  \cr
+    2. \tab \code{EQID} \tab Earthquake identification number in the NGA
+    flatfile  \cr
+    3. \tab \code{EQName} \tab Earthquake name \cr
+    4. \tab \code{Year} \tab Year of the earthquake \cr
+    5. \tab \code{MoDay} \tab Month and day of the earthquake \cr
+    6. \tab \code{StationName} \tab Name of the strong-motion station \cr
+    7. \tab \code{StaSeqNum} \tab Sequence number of the strong-motion
+    station \cr
+    8. \tab \code{StaID} \tab Identification number of the strong-motion
     station (provided by data provider) \cr
-    9. \tab M \tab Moment magnitude of earthquake \cr
-    10. \tab Dip \tab Dip angle of the rupture plane (deg) \cr
-    11. \tab Rake \tab Rake angle of fault movement (deg) \cr
-    12. \tab Ztor \tab Depth to top of rupture (km) \cr
-    13. \tab W \tab Down-dip width of rupture plane (km) \cr
-    14. \tab Rjb \tab Joyner-Boore distance (km):  the horizontal
+    9. \tab \code{M} \tab Moment magnitude of earthquake \cr
+    10. \tab \code{Dip} \tab Dip angle of the rupture plane (deg) \cr
+    11. \tab \code{Rake} \tab Rake angle of fault movement (deg) \cr
+    12. \tab \code{Ztor} \tab Depth to top of rupture (km) \cr
+    13. \tab \code{W} \tab Down-dip width of rupture plane (km) \cr
+    14. \tab \code{Rjb} \tab Joyner-Boore distance (km):  the horizontal
     distance to the surface projection of the rupture plane \cr
-    15. \tab Rrup \tab Rupture distance (km):  the closest distance to the
-    rupture plane \cr
-    16. \tab Azimuth \tab Source-to-site azimuth (deg) \cr
-    17. \tab Vs30 \tab Time-averaged shear wave velocity over a subsurface
-    depth of 30 meters (m/s) \cr
-    18. \tab VsFlag \tab Vs Flag variable: 1 for measured Vs, 0 for inferred Vs \cr
-    19. \tab Z1.0 \tab Depth to Vs = 1.0 km/s (m) \cr
-    20. \tab Z1.5 \tab Depth to Vs = 1.5 km/s (m) \cr
-    21. \tab Z2.5 \tab Depth to Vs = 2.5 km/s (m) \cr
-    22. \tab PGA \tab Observed peak ground acceleration (g) \cr
-    23. \tab PGV \tab Observed peak ground velocity (cm/s) \cr
-    24. \tab PGD \tab Observed peak ground displacement (cm) \cr
-    25. \tab T0.010S \tab Observed spectral acceleration (Sa) at T =
+    15. \tab \code{Rrup} \tab Rupture distance (km):  the closest
+    distance to the rupture plane \cr
+    16. \tab \code{Azimuth} \tab Source-to-site azimuth (deg) \cr
+    17. \tab \code{Vs30} \tab Time-averaged shear wave velocity over a
+    subsurface depth of 30 meters (m/s) \cr
+    18. \tab \code{VsFlag} \tab Vs Flag variable: 1 for measured Vs, 0
+    for inferred Vs \cr
+    19. \tab \code{Z1.0} \tab Depth to Vs = 1.0 km/s (m) \cr
+    20. \tab \code{Z1.5} \tab Depth to Vs = 1.5 km/s (m) \cr
+    21. \tab \code{Z2.5} \tab Depth to Vs = 2.5 km/s (m) \cr
+    22. \tab \code{PGA} \tab Observed peak ground acceleration (g) \cr
+    23. \tab \code{PGV} \tab Observed peak ground velocity (cm/s) \cr
+    24. \tab \code{PGD} \tab Observed peak ground displacement (cm) \cr
+    25. \tab \code{T0.010S} \tab Observed spectral acceleration (Sa) at T =
     0.010 sec \cr
-    26. \tab T0.020S \tab Observed Sa at T = 0.020 sec \cr
-    27. \tab T0.030S \tab Observed Sa at T = 0.030 sec \cr
-    28. \tab T0.040S \tab Observed Sa at T = 0.040 sec \cr
-    29. \tab T0.050S \tab Observed Sa at T = 0.050 sec \cr
-    30. \tab T0.075S \tab Observed Sa at T = 0.750 sec \cr
-    31. \tab T0.100S \tab Observed Sa at T = 0.100 sec \cr
-    32. \tab T0.150S \tab Observed Sa at T = 0.150 sec \cr
-    33. \tab T0.200S \tab Observed Sa at T = 0.200 sec \cr
-    34. \tab T0.250S \tab Observed Sa at T = 0.250 sec \cr
-    35. \tab T0.300S \tab Observed Sa at T = 0.300 sec \cr
-    36. \tab T0.400S \tab Observed Sa at T = 0.400 sec \cr
-    37. \tab T0.500S \tab Observed Sa at T = 0.500 sec \cr
-    38. \tab T0.750S \tab Observed Sa at T = 0.750 sec \cr
-    39. \tab T1.000S \tab Observed Sa at T = 1.000 sec \cr
-    40. \tab T1.500S \tab Observed Sa at T = 1.500 sec \cr
-    41. \tab T2.000S \tab Observed Sa at T = 2.000 sec \cr
-    42. \tab T3.000S \tab Observed Sa at T = 3.000 sec \cr
-    43. \tab T4.000S \tab Observed Sa at T = 4.000 sec \cr
-    44. \tab T5.000S \tab Observed Sa at T = 5.000 sec \cr
-    45. \tab T7.500S \tab Observed Sa at T = 7.500 sec \cr
-    46. \tab T10.000S \tab Observed Sa at T = 10.000 sec \cr
-     \tab \tab
+    26. \tab \code{T0.020S} \tab Observed Sa at T = 0.020 sec \cr
+    27. \tab \code{T0.030S} \tab Observed Sa at T = 0.030 sec \cr
+    28. \tab \code{T0.040S} \tab Observed Sa at T = 0.040 sec \cr
+    29. \tab \code{T0.050S} \tab Observed Sa at T = 0.050 sec \cr
+    30. \tab \code{T0.075S} \tab Observed Sa at T = 0.750 sec \cr
+    31. \tab \code{T0.100S} \tab Observed Sa at T = 0.100 sec \cr
+    32. \tab \code{T0.150S} \tab Observed Sa at T = 0.150 sec \cr
+    33. \tab \code{T0.200S} \tab Observed Sa at T = 0.200 sec \cr
+    34. \tab \code{T0.250S} \tab Observed Sa at T = 0.250 sec \cr
+    35. \tab \code{T0.300S} \tab Observed Sa at T = 0.300 sec \cr
+    36. \tab \code{T0.400S} \tab Observed Sa at T = 0.400 sec \cr
+    37. \tab \code{T0.500S} \tab Observed Sa at T = 0.500 sec \cr
+    38. \tab \code{T0.750S} \tab Observed Sa at T = 0.750 sec \cr
+    39. \tab \code{T1.000S} \tab Observed Sa at T = 1.000 sec \cr
+    40. \tab \code{T1.500S} \tab Observed Sa at T = 1.500 sec \cr
+    41. \tab \code{T2.000S} \tab Observed Sa at T = 2.000 sec \cr
+    42. \tab \code{T3.000S} \tab Observed Sa at T = 3.000 sec \cr
+    43. \tab \code{T4.000S} \tab Observed Sa at T = 4.000 sec \cr
+    44. \tab \code{T5.000S} \tab Observed Sa at T = 5.000 sec \cr
+    45. \tab \code{T7.500S} \tab Observed Sa at T = 7.500 sec \cr
+    46. \tab \code{T10.000S} \tab Observed Sa at T = 10.000 sec \cr
+    \tab \tab
   }
 }
 \source{Pacific Earthquake Engineering Research Center. Next Generation
@@ -119,6 +122,7 @@ data(mainshocks)
 names(mainshocks)
 
 
+######################################################################
 # Example 1:  Generate a plot of observed versus predicted response
 #             spectrum for a ground motion record in the database
 
@@ -138,7 +142,6 @@ Rjb <- mainshocks$Rjb[n]
 Rrup <- mainshocks$Rrup[n]
 azimuth <- mainshocks$Azimuth[n]
 Vs30 <- mainshocks$Vs30[n]
-VsFlag <- mainshocks$VsFlag[n]
 Z1.0 <- mainshocks$Z1.0[n]
 Z1.5 <- mainshocks$Z1.5[n]
 Z2.5 <- mainshocks$Z2.5[n]
@@ -177,14 +180,14 @@ Sa.obs <- c(Sa0.01, Sa0.02, Sa0.03, Sa0.04, Sa0.05, Sa0.075, Sa0.10,
             Sa1.00, Sa1.50, Sa2.00, Sa3.00, Sa4.00, Sa5.00, Sa7.50, Sa10.0)
 
 # Compute ground motion predictions
-ResultsMatrix <- Sa.ngaR(M = M, dip = dip, rake = rake, Ztor = Ztor,
-                         W = W, Rjb = Rjb, Rrup = Rrup, azimuth = azimuth,
-                         Vs30 = Vs30, Z1.0 = Z1.0, Z1.5 = Z1.5, Z2.5 = Z2.5,
-                         VsFlag = VsFlag, epsilon = 1, T = T.list)
+ResultsMatrix <- Sa.nga(M = M, dip = dip, rake = rake, Ztor = Ztor,
+                        W = W, Rjb = Rjb, Rrup = Rrup, azimuth = azimuth,
+                        Vs30 = Vs30, Z1.0 = Z1.0, Z1.5 = Z1.5, Z2.5 = Z2.5,
+                        epsilon = 1, T = T.list)
 
 # Access individual columns of the data frame using the "$" operator:
 SaAS08 <- ResultsMatrix$Y50.as
-SaBA08 <- ResultsMatrix$Y50.ba
+SaBA08 <- ResultsMatrix$Y50M.ba
 SaCB08 <- ResultsMatrix$Y50.cb
 SaCY08 <- ResultsMatrix$Y50.cy
 
@@ -204,7 +207,7 @@ legend(x = "bottomleft", inset = 0.02, lwd = c(4,2,2,2,2), bty = "n",
 
 
 
-
+############################################################################
 # Example 2:  Generate a plot of peak ground acceleration versus distance
 #             for the Loma Prieta earthquake of 1989
 
@@ -224,7 +227,6 @@ Rjb <- mainshocks$Rjb[n]
 Rrup <- mainshocks$Rrup[n]
 azimuth <- mainshocks$Azimuth[n]
 Vs30 <- mainshocks$Vs30[n]
-VsFlag <- mainshocks$VsFlag[n]
 Z1.0 <- mainshocks$Z1.0[n]
 Z1.5 <- mainshocks$Z1.5[n]
 Z2.5 <- mainshocks$Z2.5[n]
@@ -250,25 +252,24 @@ Rjb.plot <- seq(from = 0, to = 120, by = 1)
 Fhw <- 0   # Assume site is on footwall
 
 # First illustrate the calculation for one point
-ResultsMatrix1 <- Sa.ngaR(M = M.value, dip = dip.value, rake = rake.value,
-                          Ztor = Ztor.value, W = W.value, Rjb = 0, Fhw = 0,
-			  Vs30 = Vs30.value, VsFlag = 0, epsilon = 0, T = 0)		  
+ResultsMatrix1 <- Sa.nga(M = M.value, dip = dip.value, rake = rake.value,
+                         Ztor = Ztor.value, W = W.value, Rjb = 0, Fhw = 0,
+			 Vs30 = Vs30.value, epsilon = 0, T = 0)		  
 
 # Perform ground motion calculations for all points
 #   It is necessary to place this in a loop since we are varying Rjb			  
-ResultsMatrix2 <- matrix(nrow = length(Rjb), ncol = dim(ResultsMatrix1)[2])
+ResultsMatrix2 <- matrix(nrow = length(Rjb.plot), ncol = length(ResultsMatrix1))
 ResultsMatrix2 <- as.data.frame(ResultsMatrix2)
 names(ResultsMatrix2) <- names(ResultsMatrix1)
 for(i in 1:length(Rjb.plot)){
-  ResultsMatrix2[i,] <- Sa.ngaR(M = M.value, dip = dip.value, rake = rake.value,
-                                Ztor = Ztor.value, W = W.value, Rjb = Rjb.plot[i],
-                                Fhw = 0, Vs30 = Vs30.value, VsFlag = 0,
-                                epsilon = 0, T = 0)
+  ResultsMatrix2[i,] <- Sa.nga(M = M.value, dip = dip.value, rake = rake.value,
+                               Ztor = Ztor.value, W = W.value, Rjb = Rjb.plot[i],
+                               Fhw = 0, Vs30 = Vs30.value, epsilon = 0, T = 0)
 }
 
 # Access individual columns of the data frame using the "$" operator:
 pgaAS08 <- ResultsMatrix2$Y50.as
-pgaBA08 <- ResultsMatrix2$Y50.ba
+pgaBA08 <- ResultsMatrix2$Y50M.ba
 pgaCB08 <- ResultsMatrix2$Y50.cb
 pgaCY08 <- ResultsMatrix2$Y50.cy
 
@@ -290,6 +291,7 @@ legend(x = "bottomleft", inset = 0.02, pch = c(1,-1,-1,-1,-1),
 
 
 
+########################################################################
 # Example 3:  Tabulate predicted versus observed peak ground velocity
 #             for the ground motion records in the Loma Prieta Earthquake
 
@@ -306,7 +308,6 @@ Rjb <- mainshocks$Rjb[n]
 Rrup <- mainshocks$Rrup[n]
 azimuth <- mainshocks$Azimuth[n]
 Vs30 <- mainshocks$Vs30[n]
-VsFlag <- mainshocks$VsFlag[n]
 Z1.0 <- mainshocks$Z1.0[n]
 Z1.5 <- mainshocks$Z1.5[n]
 Z2.5 <- mainshocks$Z2.5[n]
@@ -320,14 +321,13 @@ pgvCY08 <- matrix(nrow = length(n), ncol = 1)
 
 # Perform ground motion predictions
 for(i in 1:length(n)){
-  ResultsMatrix <- Sa.ngaR(M = M[i], dip = dip[i], rake = rake[i],
-                           Ztor = Ztor[i], W = W[i], Rjb = Rjb[i],
-                           Rrup = Rrup[i], azimuth = azimuth[i],
-                           Vs30 = Vs30[i], Z1.0 = Z1.0[i], Z1.5 = Z1.5[i],
-                           Z2.5 = Z2.5[i], VsFlag = VsFlag[i],
-                           epsilon = 0, T = -1)
+  ResultsMatrix <- Sa.nga(M = M[i], dip = dip[i], rake = rake[i],
+                          Ztor = Ztor[i], W = W[i], Rjb = Rjb[i],
+                          Rrup = Rrup[i], azimuth = azimuth[i],
+                          Vs30 = Vs30[i], Z1.0 = Z1.0[i], Z1.5 = Z1.5[i],
+                          Z2.5 = Z2.5[i], epsilon = 0, T = -1)
   pgvAS08[i] <- ResultsMatrix$Y50.as
-  pgvBA08[i] <- ResultsMatrix$Y50.ba
+  pgvBA08[i] <- ResultsMatrix$Y50M.ba
   pgvCB08[i] <- ResultsMatrix$Y50.cb
   pgvCY08[i] <- ResultsMatrix$Y50.cy
 }
@@ -339,5 +339,115 @@ pgvBA08
 pgvCB08
 pgvCY08
 
+
+
+########################################################################
+# Example 4:  Generate matrices of median predicted response spectra
+#             for the Denali, Alaska, earthquake of 2002
+
+# The relevant grond motion records are present in rows 1220 to 1228
+# of the mainshocks database:
+
+# Read data (same as examples 2 and 3)
+start <- 1220
+end <- 1228
+n <- seq(from = start, to = end, by = 1)
+M <- mainshocks$M[n]
+dip <- mainshocks$Dip[n]
+rake <- mainshocks$Rake[n]
+Ztor <- mainshocks$Ztor[n]
+W <- mainshocks$W[n]
+Rjb <- mainshocks$Rjb[n]
+Rrup <- mainshocks$Rrup[n]
+azimuth <- mainshocks$Azimuth[n]
+Vs30 <- mainshocks$Vs30[n]
+VsFlag <- mainshocks$VsFlag[n]
+Z1.0 <- mainshocks$Z1.0[n]
+Z1.5 <- mainshocks$Z1.5[n]
+Z2.5 <- mainshocks$Z2.5[n]
+
+
+# Create matrix of observed response spectra
+
+# Read observed data as vectors
+Sa0.01 <- mainshocks$T0.010S[n]
+Sa0.02 <- mainshocks$T0.020S[n]
+Sa0.03 <- mainshocks$T0.030S[n]
+Sa0.04 <- mainshocks$T0.040S[n]
+Sa0.05 <- mainshocks$T0.050S[n]
+Sa0.075 <- mainshocks$T0.075S[n]
+Sa0.10 <- mainshocks$T0.100S[n]
+Sa0.15 <- mainshocks$T0.150S[n]
+Sa0.20 <- mainshocks$T0.200S[n]
+Sa0.25 <- mainshocks$T0.250S[n]
+Sa0.30 <- mainshocks$T0.300S[n]
+Sa0.40 <- mainshocks$T0.400S[n]
+Sa0.50 <- mainshocks$T0.500S[n]
+Sa0.75 <- mainshocks$T0.750S[n]
+Sa1.00 <- mainshocks$T1.000S[n]
+Sa1.50 <- mainshocks$T1.500S[n]
+Sa2.00 <- mainshocks$T2.000S[n]
+Sa3.00 <- mainshocks$T3.000S[n]
+Sa4.00 <- mainshocks$T4.000S[n]
+Sa5.00 <- mainshocks$T5.000S[n]
+Sa7.50 <- mainshocks$T7.500S[n]
+Sa10.0 <- mainshocks$T10.000S[n]
+PGA <- mainshocks$PGA[n]
+PGV <- mainshocks$PGV[n]
+
+# Combine the individual vectors into a matrix using the
+# "cbind" function
+Obs <- cbind(Sa0.01, Sa0.02, Sa0.03, Sa0.04, Sa0.05, Sa0.075, Sa0.10,
+             Sa0.15, Sa0.20, Sa0.25, Sa0.30, Sa0.40, Sa0.50, Sa0.75,
+             Sa1.00, Sa1.50, Sa2.00, Sa3.00, Sa4.00, Sa5.00, Sa7.50,
+             Sa10.0, PGA, PGV)
+
+
+# Create matrices to store data
+PredAS08 <- matrix(nrow = length(n), ncol = 24)
+PredBA08 <- matrix(nrow = length(n), ncol = 24)
+PredCB08 <- matrix(nrow = length(n), ncol = 24)
+PredCY08 <- matrix(nrow = length(n), ncol = 24)
+colnames(PredAS08) <- colnames(Obs)
+colnames(PredBA08) <- colnames(Obs)
+colnames(PredCB08) <- colnames(Obs)
+colnames(PredCY08) <- colnames(Obs)
+
+
+# Perform ground motion predictions (this example illustrates the
+# use of the individual functions Sa.as, Sa.ba, Sa.cb, and Sa.cy,
+# which are faster and generate less output than Sa.nga)
+
+# Periods for analysis
+T.list <- modelPeriods(model = "AS08", positive = FALSE)
+
+# Ground motion calculations
+for(i in 1:length(n)){
+  PredAS08[i,] <- Sa.as(M = M[i], dip = dip[i], rake = rake[i],
+                        Ztor = Ztor[i], W = W[i], Rjb = Rjb[i],
+                        Rrup = Rrup[i], azimuth = azimuth[i],
+                        Vs30 = Vs30[i], VsFlag = VsFlag[i],
+                        Z1.0 = Z1.0[i], Fas = 0, epsilon = 0, T = T.list)
+  PredBA08[i,] <- Sa.ba(M = M[i], rake = rake[i], Rjb = Rjb[i],
+                        Vs30 = Vs30[i], epsilon = 0, T = T.list)
+  PredCB08[i,] <- Sa.cb(M = M[i], dip = dip[i], rake = rake[i],
+                        Ztor = Ztor[i], Rjb = Rjb[i], Rrup = Rrup[i],
+                        Vs30 = Vs30[i], Z1.0 = Z1.0[i], Z1.5 = Z1.5[i],
+                        Z2.5 = Z2.5[i], epsilon = 0, T = T.list)
+  PredCY08[i,] <- Sa.cy(M = M[i], dip = dip[i], rake = rake[i],
+                        Ztor = Ztor[i], W = W[i], Rjb = Rjb[i],
+                        Rrup = Rrup[i], azimuth = azimuth[i],
+                        Vs30 = Vs30[i], VsFlag = VsFlag[i],
+                        Z1.0 = Z1.0[i], AS = 0, epsilon = 0, T = T.list)
 }
 
+# Display results
+PredAS08
+PredBA08
+PredCB08
+PredCY08
+
+# Now each of the matrices may be used in later calculations, or
+# written to a text or csv file.
+
+}

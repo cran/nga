@@ -20,15 +20,15 @@ coefs.cy()
   NGA models:
   
   \tabular{ll}{
-    \code{coefs.as} \tab c, c1, c2, c4, and n (Table 4 in Abrahamson and
+    \code{coefs.as} \tab \code{c, c1, c2, c4,} and \code{n} (Table 4 in Abrahamson and
     Silva (2008)). \cr
-    \code{coefs.ba} \tab a1, pga.low, a2, V1, V2, and Vref
+    \code{coefs.ba} \tab \code{a1, pga.low, a2, V1, V2,} and \code{Vref}
     (Site-amplification coefficients in Table 4 of Boore and Atkinson
     (2008)). \cr
-     \tab Mref and Rref (Distance-scaling coefficients in Table 6) \cr
-     \code{coefs.cb} \tab c and n (bottom of Table 2 in Campbell and
+     \tab \code{Mref} and \code{Rref} (Distance-scaling coefficients in Table 6) \cr
+     \code{coefs.cb} \tab \code{c} and \code{n} (bottom of Table 2 in Campbell and
      Bozorgnia (2008)). \cr
-    \code{coefs.cy} \tab c2, c3, c4, c4a, cRB, cHM, and cGamma3 (Table
+    \code{coefs.cy} \tab \code{c2, c3, c4, c4a, cRB, cHM,} and \code{cGamma3} (Table
     1 in Chiou and Youngs (2008)).
   }
 }
