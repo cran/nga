@@ -17,7 +17,12 @@
 \description{
   The sub-functions needed to estimate ground motions using the
   Campbell & Bozorgnia NGA model.  These functions are called by the main
-  function used for calculations, \code{\link{Sa.cb}}.
+  function used for calculations, \code{\link{Sa.cb}}.  \emph{NOTE:} the
+  CB08 model is designed with Z2.5 in units of km.  The internal
+  functions on this page require that Z2.5 be input in units of km, 
+  while the more comprehensive \code{\link{Sa.cb}} and
+  \code{\link{Sa.nga}} functions require that Z2.5 be input in units of
+  m, to be consistent with the units of the other depth parameters).
 }
 \usage{
 Fmag.cb(M, T)

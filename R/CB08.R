@@ -44,7 +44,9 @@
 #   Ztor = Depth to top of rupture (km)
 #   Z1.0 = Depth to Vs = 1.0 km/sec  (m); used to estimate Z2.5
 #   Z1.5 = Depth to Vs = 1.5 km/sec  (m); used to estimate Z2.5
-#   Z2.5 = Depth to Vs = 2.5 km/sec  (km) -- note the units difference from Z1.0 and Z1.5
+#   Z2.5 = Depth to Vs = 2.5 km/sec  [km for all functions except for Sa.cb,
+#          which requires Z2.5 in units of m (to be consistent with the units
+#          of the other depth parameters)]
 #   rake = Rake angle of fault movement (deg)
 #   Frv = Reverse style-of-faulting flag (1 for reverse faulting,
 #         0 otherwise); calculated from rake
@@ -53,7 +55,7 @@
 #   Fhw = Hanging wall flag; equal to 1 for sites on the hanging wall side of the fault
 #         (azimuth >= 0), and 0 otherwise.  Used in the calculation of Rrup when Rrup
 #         is unspecified.
-#   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010).
+#   azimuth = source-to-site azimuth (deg); see Kaklamanos et al. (2011).
 #             Used in the calculation of Rrup when Rrup is unspecified.
 #   Zhyp = hypocentral depth (km)
 #   arb = "1" if the standard deviation should be calculated for the arbitrary
@@ -668,8 +670,8 @@ Sa.cb <- function(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA, Ztor = 
       Ztor <- Ztor.calc(W, dip, Zhyp)
     }
 
-    # Calculate Rrup from Rjb (using distance equations from Kaklamanos and
-    # Baise (2010) if Rrup is not provided)
+    # Calculate Rrup from Rjb (using distance equations from Kaklamanos et al.
+    # (2011) if Rrup is not provided)
     if(is.na(Rrup) == TRUE){
       # Down-dip rupture width, W (used for calculating Rrup)
       if(is.na(W) == TRUE)
@@ -707,20 +709,27 @@ Sa.cb <- function(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA, Ztor = 
       # Calculate from Z1.5 if provided
       # (Eqn 6.4 in Campbell and Bozorgnia (2007); final report to PEER)
       if(is.na(Z1.5) == FALSE){
-        Z2.5 <- 0.636 + 0.001549*Z1.5
+        Z2.5 <- 636 + 1.549*Z1.5
         # Calculate from Z1.0 if provided
         # (Eqn 6.3 in Campbell and Bozorgnia (2007); final report to PEER)
       } else{
         if(is.na(Z1.0) == FALSE){
-          Z2.5 <- 0.519 + 0.003595*Z1.0
+          Z2.5 <- 519 + 3.595*Z1.0
           # If neither Z1.0 nor Z1.5 is provided, estimate from
           # Vs30 using the AS08 relation for Z1.0 = f(Vs30)
         } else{
           Z1.0 <- Z1.calc.as(Vs30)
-          Z2.5 <- 0.519 + 0.003595*Z1.0
+          Z2.5 <- 519 + 3.595*Z1.0
         }
       }
     }
+    # Warn if Z2.5 is too low (user may have accidentally input in km
+    # instead of m)
+    if(Z2.5 <= 10)
+      warning("Z2.5 should be entered in meters to Sa.cb and Sa.nga")
+    # Convert Z2.5 to km for use in the internal CB08 functions
+    # (Added 27 Jul. 2010; Z2.5 is now input to Sa.cb in units of m)
+    Z2.5 <- Z2.5 / 1000
 
     
     # 5C. CALCULATE GROUND MOTION PARAMETER

@@ -49,7 +49,7 @@
 #         0 otherwise); calculated from rake
 #   Fhw = Hanging wall flag (1 for site on hanging wall site of fault,
 #         0 otherwise); calculated from azimuth or Rx (if provided)
-#   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
+#   azimuth = source-to-site azimuth (deg); see Kaklamanos et al. (2011).
 #   Zhyp = hypocentral depth (km)
 #   AS = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   Yref = median ground motion for the reference rock site condition (Eqn 13a)

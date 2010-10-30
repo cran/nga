@@ -7,7 +7,7 @@
   site coordinate (\code{Rx}) from the other distance parameters and the
   geometric source characteristics of the fault rupture.  The equations
   for \code{Rx} and \code{Rrup} are derived and explained in Kaklamanos
-  and Baise (2010).
+  et al. (2011).
 }
 \usage{
 Rx.calc(Rjb, Ztor, W, dip, azimuth, Rrup = NA)
@@ -24,8 +24,8 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
   \item{Ztor}{Depth to top of rupture (km).}
   \item{W}{Down-dip rupture width (km).}
   \item{dip}{Fault dip angle (deg).}
-  \item{azimuth}{source-to-site azimuth (deg); see Figure 2 in
-    Kaklamanos and Baise (2010).}
+  \item{azimuth}{source-to-site azimuth (deg); see Kaklamanos et
+    al. (2011) for a description.}
 }
 \details{
   The distance functions for \code{Rx} and \code{Rrup} require that the
@@ -66,14 +66,15 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
 \author{James Kaklamanos <james.kaklamanos@tufts.edu> and
   Eric M. Thompson <eric.thompson@tufts.edu>}
 \references{
-  Kaklamanos, J., and L. G. Baise (2010).  Relationships between
-  Distance Measures in Recent Ground Motion Prediction Equations.
-  \emph{Seismological Research Letters} (in review).
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
+  Estimating Unknown Input Parameters when Implementing the NGA Ground
+  Motion Prediction Equations in Engineering Practice.
+  \emph{Earthquake Spectra} (in press).
 }
 \examples{
 #########################################################################
-# Example 1:  Calculate the distance measures for the synthetic example
-#             presented in Kaklamanos and Baise (2010), Rjb = 5
+# Example 1:  Calculate the distance measures for a synthetic example,
+#             with Rjb = 5
 
 # Assumed source and location parameters
 M <- 6
@@ -109,9 +110,8 @@ Rrup
 
 
 #########################################################################
-# Example 2:  Calculate the distance measures for the synthetic example
-#             presented in Kaklamanos and Baise (2010), for values of
-#             Rjb ranging from 0 to 100
+# Example 2:  Calculate and plot the distance measures for a synthetic
+#             example, for values of Rjb ranging from 0 to 100
 
 # Redefine Rjb as a vector
 Rjb <- seq(from = 0, to = 20, by = 0.5)

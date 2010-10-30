@@ -36,13 +36,13 @@ Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
     estimated or inferred.}
   \item{epsilon}{number of standard deviations to be considered in the
     calculations.  Use 0 to obtain a median estimate of ground motion.}
-  \item{T}{Spectral period (sec).  Use 0 for PGA, -1 for PGV, and -2 for
-    PGD (CB08 only).  For spectral acceleration, \code{T} must be in the
-    range \code{0.01 <= T <= 10 sec}.  If the specified period is within
-    the allowable range and does not have defined equations, the program
-    uses log-log interpolation (using \code{\link{interpolate}}) between
-    the next-highest and next-lowest spectral periods with defined
-    equations.}  
+  \item{T}{Spectral period (sec).  Use 0 for PGA and -1 for PGV. For the
+    CB08 model only, specify -2 for PGD.  For spectral acceleration,
+    \code{T} must be in the range \code{0.01 <= T <= 10 sec}.  If the
+    specified period is within the allowable range and does not have
+    defined equations, the program uses log-log interpolation (using
+    \code{\link{interpolate}}) between the next-highest and next-lowest
+    spectral periods with defined equations.}
   \item{Rrup}{Rupture distance (km):  the closest distance to the
     rupture plane; if left empty, \code{Rrup} is calculated from
     \code{Rx}, the source-to-site azimuth, and the geometric rupture
@@ -68,7 +68,7 @@ Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
   \item{Z1.5}{Depth to Vs = 1.5 km/s (m).  Z1.5 is not utilized in
     ground motion calculations, but if available, it may be used to
     estimate \code{Z2.5} for the CB08 model.}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (km).  If left empty, \code{Z2.5}
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (m).  If left empty, \code{Z2.5}
     is estimated from \code{Z1.5} or \code{Z1.0} if available, using the
     recommendations in Campbell and Bozorgnia (2007).  If neither
     \code{Z1.5} nor \code{Z1.0} is available, then \code{Vs30} is used
@@ -104,11 +104,17 @@ Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
     to 1 for strike-slip faulting (when the rake is not in either of the
     ranges specified for RS or NS), and 0 otherwise.}
   \item{Fhw}{Hanging wall flag; equal to 1 for sites on the hanging
-    wall side of the fault (\code{Rx >= 0; azimuth >= 0}), and 0 otherwise.}
-  \item{azimuth}{Source-to-site azimuth (deg); see Figure 2 in
-    Kaklamanos and Baise (2010) for details.  Used by
-    \code{\link{Rx.calc}} and \code{\link{Rrup.calc}} for distance
-    calculations.}
+    wall side of the fault (\code{Rx >= 0; azimuth >= 0}), and 0
+    otherwise.  For AS08 and CY08, either \code{Fhw}, \code{Rx}, or
+    \code{azimuth} must be specified.  For CB08, the parameters
+    \code{Fhw} and \code{azimuth} are optional, and they are only used
+    to estimate \code{Rrup} when \code{Rrup} is unknown; if neither
+    \code{Fhw} nor \code{azimuth} is specified, the site is assumed to
+    be located on the footwall, and \code{Rrup} is easily estimated as
+    \code{sqrt(Rjb^2 + Ztor^2).}}
+  \item{azimuth}{Source-to-site azimuth (deg); see Kaklamanos et
+    al. (2011) for details.  Used by \code{\link{Rx.calc}} and
+    \code{\link{Rrup.calc}} for distance calculations.}
   \item{Zhyp}{Hypocentral depth of the earthquake (km).  \code{Zhyp} is not
     utilized in ground motion calculations, but it may be used to estimate
     \code{Ztor}.  See \code{\link{Ztor.calc}} for details.}
@@ -136,7 +142,7 @@ must be scalars.
 \seealso{
   See \code{\link{Sa.nga}} for a comprehensive function that computes
   the ground motions from the AS08, BA08, CB08, and CY08 models, and
-  outputs data in a matrix format.  See \code{\link{mainshocks}} for an
+  outputs data in a matrix format.  See \code{\link{KBflatfile}} for an
   example of inputting and outputting earthquake data and predictions.
   
   For details on the sub procedures used for the individual NGA models, see
@@ -150,7 +156,8 @@ must be scalars.
   For procedures on estimating input variables when they are not known,
   see \code{\link{Rx.calc}}, \code{\link{Rrup.calc}},
   \code{\link{dip.calc}}, \code{\link{W.calc}}, \code{\link{Ztor.calc}},
-  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.
+  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.  These procedures
+  are further described in Kaklamanos et al. (2011).
 
   For details on the spectral periods and ground motion parameters
   defined for each of the models, see \code{\link{modelPeriods}} or
@@ -186,10 +193,11 @@ must be scalars.
   Chiou, B. S.-J., and R. R. Youngs (2008). An NGA Model for the Average
   Horizontal Component of Peak Ground Motion and Response Spectra.
   \emph{Earthquake Spectra} \bold{24,} 173--215. 
-
-  Kaklamanos, J., and L. G. Baise (2010).  Relationships between
-  Distance Measures in Recent Ground Motion Prediction Equations.
-  \emph{Seismological Research Letters} (in review).
+  
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
+  Estimating Unknown Input Parameters when Implementing the NGA Ground
+  Motion Prediction Equations in Engineering Practice.
+  \emph{Earthquake Spectra} (in press).
 }
 \examples{
 

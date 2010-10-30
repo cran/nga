@@ -11,7 +11,7 @@
 # 1. Check Input Parameters
 # 2. Obtain Estimates of Unspecified Input Parameters
 # 3. Calculation of Ground Motions
-# 4. Return List of Inputs and Outputs
+# 4. Return Data Frame of Inputs and Outputs
 
 
 # I. INPUT PARAMETERS:
@@ -26,7 +26,7 @@
 #    Ztor = Depth to top of rupture (km)
 #    Z1.0 = Depth to Vs = 1.0 km/sec  (m)
 #    Z1.5 = Depth to Vs = 1.5 km/sec  (m)
-#    Z2.5 = Depth to Vs = 2.5 km/sec  (km)
+#    Z2.5 = Depth to Vs = 2.5 km/sec  (m)
 #    rake = Rake angle of fault movement (deg)
 #    Frv = Reverse style-of-faulting flag (1 for reverse faulting,
 #          0 otherwise)
@@ -34,7 +34,7 @@
 #          0 otherwise)
 #    Fhw = Hanging wall flag; 1 for site on the hanging wall side of the fault,
 #          and 0 otherwise
-#    azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
+#    azimuth = source-to-site azimuth (deg); see Kaklamanos et al. (2011)
 #    Zhyp = hypocentral depth (km)
 #    Fas = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #    epsilon = number of standard deviations to be considered in the calculations;
@@ -74,8 +74,8 @@
 #     Z1.0as = Depth to Vs of 1.0 km/sec  (m) [calculated for use in AS08 model]
 #     Z1.0cy = Depth to Vs of 1.0 km/sec  (m) [calculated for use in CY08 model]
 #     Z1.5 = Depth to Vs of 1.5 km/sec  (m) [input]
-#     Z2.5in = Depth to Vs of 2.5 km/sec  (km) [input]
-#     Z2.5out = Depth to Vs of 2.5 km/sec  (km) [calculated from Z1.0 for use in CB08 model]
+#     Z2.5in = Depth to Vs of 2.5 km/sec  (m) [input]
+#     Z2.5out = Depth to Vs of 2.5 km/sec  (m) [calculated from Z1.0 for use in CB08 model]
 #     Fas = Aftershock flag [input]
 #     epsilon = number of standard deviations considered in the calculations [input]
 #
@@ -387,24 +387,25 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
     }
      
     # Depth parameter, Z2.5
+    # Changed 27 Jul. 2010 to estimate Z2.5 in m instead of km
     if(is.na(Z2.5in) == TRUE){
       # Calculate from Z1.5 if provided
       # (Eqn 6.4 in Campbell and Bozorgnia (2007); final report to PEER)
       if(is.na(Z1.5) == FALSE){
-        Z2.5 <- 0.636 + 0.001549*Z1.5
+        Z2.5 <- 636 + 1.549*Z1.5
         # Calculate from Z1.0 if provided
         # (Eqn 6.3 in Campbell and Bozorgnia (2007); final report to PEER)
       } else{
         if(is.na(Z1.0in) == FALSE){
-          Z2.5 <- 0.519 + 0.003595*Z1.0
+          Z2.5 <- 519 + 3.595*Z1.0
           # If neither Z1.0 nor Z1.5 is provided, estimate from
           # Vs30 using the AS08 relation for Z1.0 = f(Vs30)
         } else{
-          Z2.5 <- 0.519 + 0.003595*Z1.0as
+          Z2.5 <- 519 + 3.595*Z1.0as
         }
       }
     }
-
+    
 
   
     # 3. CALCULATION OF GROUND MOTIONS
@@ -586,70 +587,70 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
 
 
 
-    # 4. RETURN LIST OF INPUTS AND OUTPUTS
-    return(list(T = T,
-                M = M,
-                Rjb = Rjb,
-                Rrup.in = Rrup.in,
-                Rrup.out = Rrup,
-                Rx.in = Rx.in,
-                Rx.out = Rx,
-                azimuth.in = azimuth.in,
-                azimuth.out = azimuth,
-                Fhw = Fhw,
-                Zhyp.in = Zhyp.in,
-                Zhyp.out = Zhyp,
-                rake.in = rake.in,
-                rake.out = rake,
-                Frv1 = Frv1,
-                Frv2.cb = Frv2,
-                Fnm1 = Fnm1,
-                Fnm2.ba = Fnm2,
-                Fnm3.cb = Fnm3,
-                dip.in = dip.in,
-                dip.out = dip,
-                W.in = W.in,
-                W.out = W,
-                Ztor.in = Ztor.in,
-                Ztor.out = Ztor,
-                Vs30 = Vs30,
-                Z1.0in = Z1.0in,
-                Z1.0as = Z1.0as,
-                Z1.0cy = Z1.0cy,
-                Z1.5in = Z1.5,
-                Z2.5in = Z2.5in,
-                Z2.5out = Z2.5,
-                Fas = Fas,
-                epsilon = epsilon.in,
-                Y50.as = Y50.as,
-                YplusEpsilon.meas.as = YplusEpsilon.meas.as,
-                YplusEpsilon.est.as = YplusEpsilon.est.as,
-                YminusEpsilon.meas.as = YminusEpsilon.meas.as,
-                YminusEpsilon.est.as = YminusEpsilon.est.as,
-                sdMeas.as = sdMeas.as,
-                sdEst.as = sdEst.as,
-                Y50M.ba = Y50M.ba,
-                Y50U.ba = Y50U.ba,
-                YplusEpsilon.M.ba = YplusEpsilon.M.ba,
-                YplusEpsilon.U.ba = YplusEpsilon.U.ba,
-                YminusEpsilon.M.ba = YminusEpsilon.M.ba,
-                YminusEpsilon.U.ba = YminusEpsilon.U.ba,
-                sdM.ba = sdM.ba,
-                sdU.ba = sdU.ba,
-                Y50.cb = Y50.cb,
-                YplusEpsilon.GM.cb = YplusEpsilon.GM.cb,
-                YplusEpsilon.arb.cb = YplusEpsilon.arb.cb,            
-                YminusEpsilon.GM.cb = YminusEpsilon.GM.cb,
-                YminusEpsilon.arb.cb = YminusEpsilon.arb.cb,
-                sdGM.cb =  sdGM.cb,
-                sdArb.cb = sdArb.cb,
-                Y50.cy = Y50.cy,
-                YplusEpsilon.meas.cy = YplusEpsilon.meas.cy,
-                YplusEpsilon.est.cy = YplusEpsilon.est.cy,         
-                YminusEpsilon.meas.cy = YminusEpsilon.meas.cy,
-                YminusEpsilon.est.cy = YminusEpsilon.est.cy,
-                sdMeas.cy = sdMeas.cy,
-                sdEst.cy = sdEst.cy))
+    # 4. RETURN DATA FRAME OF INPUTS AND OUTPUTS
+    return(data.frame(T = T,
+                      M = M,
+                      Rjb = Rjb,
+                      Rrup.in = Rrup.in,
+                      Rrup.out = Rrup,
+                      Rx.in = Rx.in,
+                      Rx.out = Rx,
+                      azimuth.in = azimuth.in,
+                      azimuth.out = azimuth,
+                      Fhw = Fhw,
+                      Zhyp.in = Zhyp.in,
+                      Zhyp.out = Zhyp,
+                      rake.in = rake.in,
+                      rake.out = rake,
+                      Frv1 = Frv1,
+                      Frv2.cb = Frv2,
+                      Fnm1 = Fnm1,
+                      Fnm2.ba = Fnm2,
+                      Fnm3.cb = Fnm3,
+                      dip.in = dip.in,
+                      dip.out = dip,
+                      W.in = W.in,
+                      W.out = W,
+                      Ztor.in = Ztor.in,
+                      Ztor.out = Ztor,
+                      Vs30 = Vs30,
+                      Z1.0in = Z1.0in,
+                      Z1.0as = Z1.0as,
+                      Z1.0cy = Z1.0cy,
+                      Z1.5in = Z1.5,
+                      Z2.5in = Z2.5in,
+                      Z2.5out = Z2.5,
+                      Fas = Fas,
+                      epsilon = epsilon.in,
+                      Y50.as = Y50.as,
+                      YplusEpsilon.meas.as = YplusEpsilon.meas.as,
+                      YplusEpsilon.est.as = YplusEpsilon.est.as,
+                      YminusEpsilon.meas.as = YminusEpsilon.meas.as,
+                      YminusEpsilon.est.as = YminusEpsilon.est.as,
+                      sdMeas.as = sdMeas.as,
+                      sdEst.as = sdEst.as,
+                      Y50M.ba = Y50M.ba,
+                      Y50U.ba = Y50U.ba,
+                      YplusEpsilon.M.ba = YplusEpsilon.M.ba,
+                      YplusEpsilon.U.ba = YplusEpsilon.U.ba,
+                      YminusEpsilon.M.ba = YminusEpsilon.M.ba,
+                      YminusEpsilon.U.ba = YminusEpsilon.U.ba,
+                      sdM.ba = sdM.ba,
+                      sdU.ba = sdU.ba,
+                      Y50.cb = Y50.cb,
+                      YplusEpsilon.GM.cb = YplusEpsilon.GM.cb,
+                      YplusEpsilon.arb.cb = YplusEpsilon.arb.cb,            
+                      YminusEpsilon.GM.cb = YminusEpsilon.GM.cb,
+                      YminusEpsilon.arb.cb = YminusEpsilon.arb.cb,
+                      sdGM.cb =  sdGM.cb,
+                      sdArb.cb = sdArb.cb,
+                      Y50.cy = Y50.cy,
+                      YplusEpsilon.meas.cy = YplusEpsilon.meas.cy,
+                      YplusEpsilon.est.cy = YplusEpsilon.est.cy,         
+                      YminusEpsilon.meas.cy = YminusEpsilon.meas.cy,
+                      YminusEpsilon.est.cy = YminusEpsilon.est.cy,
+                      sdMeas.cy = sdMeas.cy,
+                      sdEst.cy = sdEst.cy))
   }
 }
 

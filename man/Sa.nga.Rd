@@ -21,8 +21,12 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
     surface projection of the rupture plane.}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
-  \item{T}{Spectral period (sec).  Use 0 for PGA, -1 for PGV, and -2 for
-    PGD (CB08 only).} 
+  \item{T}{Spectral period (sec).  Use 0 for PGA and -1 for PGV.  For
+    spectral acceleration, \code{T} must be in the range \code{0.01 <= T
+      <= 10 sec}.  If the  specified period is within the allowable
+    range and does not have defined equations, the program uses log-log
+    interpolation (using \code{\link{interpolate}}) between the
+    next-highest and next-lowest spectral periods with defined equations.} 
   \item{Rrup}{Rupture distance (km):  the closest distance to the
     rupture plane; if left empty, \code{Rrup} is calculated from
     \code{Rx}, the source-to-site azimuth, and the geometric rupture
@@ -48,7 +52,7 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
   \item{Z1.5}{Depth to Vs = 1.5 km/s (m).  \code{Z1.5} is not utilized in
     ground motion calculations, but if available, it may be used to
     estimate \code{Z2.5} for the CB08 model.}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (km).  If left empty, \code{Z2.5} is
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (m).  If left empty, \code{Z2.5} is
     estimated from \code{Z1.5} or \code{Z1.0} if available, using the
     recommendations in Campbell and Bozorgnia (2007).  If neither
     \code{Z1.5} nor \code{Z1.0} is available, then \code{Vs30} is used
@@ -73,8 +77,8 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
     wall side of the fault (\code{Rx >= 0; azimuth >= 0)}, and 0
     otherwise.  Either \code{Fhw}, \code{Rx}, or the azimuth must be
     specified.}
-  \item{azimuth}{Source-to-site azimuth (deg); see Figure 2 in
-    Kaklamanos and Baise (2010) for details.  Used by
+  \item{azimuth}{Source-to-site azimuth (deg); see Kaklamanos et al.
+    (2011) for details.  Used by
     \code{\link{Rx.calc}} and \code{\link{Rrup.calc}} for distance
     calculations.  Either \code{Fhw}, \code{Rx}, or the azimuth must be
     specified.}
@@ -84,12 +88,15 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
   \item{Fas}{Aftershock flag; equal to 1 for aftershocks and 0 for
     mainshocks (the default)}
   \item{epsilon}{Number of standard deviations to be considered in the
-    calculations (default value is 1).}
-  
+    calculations (default value is 1). The function \code{Sa.nga}
+    automatically outputs the median estimates (corresponding to
+    \code{epsilon = 0}) as well as the estimates corresponding to the
+    median estimate plus and minus \code{epsilon * sigmaTotal}}
+    
 }
 \value{
-  The function \code{Sa.nga} outputs a list composed of the following 63
-  elements:
+  The function \code{Sa.nga} outputs a data frame composed of the
+  following 63 columns:
 
   \bold{Input Variables:}
   \tabular{ll}{
@@ -135,11 +142,9 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
     \code{Z1.0cy} \tab Depth to Vs of 1.0 km/sec  (m) [calculated for
     use in CY08 model] \cr
     \code{Z1.5in} \tab Depth to Vs of 1.5 km/sec  (m) [input] \cr
-    \code{Z2.5in} \tab Depth to Vs of 2.5 km/sec  (km) [input] \cr
-    \code{Z2.5out} \tab Depth to Vs of 2.5 km/sec  (km) [calculated from
+    \code{Z2.5in} \tab Depth to Vs of 2.5 km/sec  (m) [input] \cr
+    \code{Z2.5out} \tab Depth to Vs of 2.5 km/sec  (m) [calculated from
     \code{Z1.0} for use in CB08 model] \cr
-    \code{VsFlag} \tab Flag variable indicating how \code{Vs30} is obtained
-    [input] \cr
     \code{Fas} \tab Aftershock flag [input] \cr
     \code{epsilon} \tab number of standard deviations considered in the
     calculations [input] \cr
@@ -223,32 +228,49 @@ the ground motion parameter of interest, which can be:
   PGA = Peak ground acceleration (g), calculated by evaluating Sa at
   \code{T = 0}; \cr
   PGV = Peak ground velocity (cm/sec), calculated by evaluating Sa at
-  \code{T = -1}; or \cr
+  \code{T = -1}.
 }
-
-\dQuote{sd} refers to the standard deviation of the ground motion
-estimate, which is presented in log space.
+Because only the CB08 model has coefficients for PGD (peak ground
+displacement), the CB08-specific function \code{\link{Sa.cb}} must be
+used to obtain predictions for PGD.  In addition, \dQuote{sd} refers to
+the standard deviation of the ground motion estimate, which is presented
+in natural log space.
 
 The flag variables \code{VsFlag}, \code{U}, and \code{arb} refer to:
-\tabular{l}{
-  \code{VsFlag} = Flag variable indicating how \code{Vs30} is obtained
-  (AS08 and CY08 models only); equal to 1 if \code{Vs30} is measured,
-  and 0 if \code{Vs30} is estimated or inferred. \cr
-  \code{U} = Unspecified style-of-faulting flag for the BA08 model; equal
-    to 1 if the user wishes to perform a generic ground motion
-    calculation when the style of faulting is unspecified. \cr
-  \code{arb} = Flag variable indicating the method of determining aleatory
-    uncertainty for the CB08 model; equal to 1 if the standard deviation
-    should be calculated for the arbitrary horizontal component of ground
-    motion, and 0 if the standard deviation should be calculated for the
-    geometric mean horizontal ground motion. \cr
-   }
+
+\code{VsFlag} = Flag variable indicating how \code{Vs30} is obtained
+(AS08 and CY08 models only); equal to 1 if \code{Vs30} is measured,
+and 0 if \code{Vs30} is estimated or inferred.
+
+\code{U} = Unspecified style-of-faulting flag for the BA08 model; equal
+to 1 if the user wishes to perform a generic ground motion
+calculation when the style of faulting is unspecified.
+
+\code{arb} = Flag variable indicating the method of determining aleatory
+uncertainty for the CB08 model; equal to 1 if the standard deviation
+should be calculated for the arbitrary horizontal component of ground
+motion, and 0 if the standard deviation should be calculated for the
+geometric mean horizontal ground motion.
+
+These three indicator variables represent model-specific options for
+output: AS08 and CY08 have different standard deviation terms for
+measured and inferred Vs30 (specified by \code{VsFlag}), BA08 is the
+only model that offers predictions for unspecified styles of faulting
+(\code{U}), and CB08 is the only model that offers predictions for the
+arbitrary horizontal component of ground motion (\code{arb}).  For
+each case (0 and 1) of each of these three indicator variables,
+\code{Sa.nga} provides the estimated ground motion.  This output is
+consistent with that of the Fortran program described later in this
+report.  The model-specific functions \code{\link{Sa.as}},
+\code{\link{Sa.ba}}, \code{\link{Sa.cb}}, and \code{\link{Sa.cy}}
+allow the user to specify the values of the indicator variables in the
+arguments to the functions.
 }
 \seealso{
-  See \code{\link{Sa.as}}, \code{\link{Sa.ba}}, \code{\link{Sa.cb}},
+  See \code{\link{Sa.as}}, \code{\link{Sa.ba}}, \code{\link{Sa.cb}}, and
   \code{\link{Sa.cy}} for separate functions that compute ground motion
   parameters using the individual NGA models. See
-  \code{\link{mainshocks}} for an example of inputting and outputting
+  \code{\link{KBflatfile}} for an example of inputting and outputting
   earthquake data and predictions.
     
   For details on the sub procedures used for the individual NGA models,
@@ -262,7 +284,8 @@ The flag variables \code{VsFlag}, \code{U}, and \code{arb} refer to:
   For procedures on estimating input variables when they are not known,
   see \code{\link{Rx.calc}}, \code{\link{Rrup.calc}},
   \code{\link{dip.calc}}, \code{\link{W.calc}}, \code{\link{Ztor.calc}},
-  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.
+  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.  These procedures
+  are further described in Kaklamanos et al. (2011).
 
   For details on the spectral periods and ground motion parameters
   defined for each of the models, see \code{\link{modelPeriods}} or
@@ -297,11 +320,12 @@ The flag variables \code{VsFlag}, \code{U}, and \code{arb} refer to:
 
   Chiou, B. S.-J., and R. R. Youngs (2008). An NGA Model for the Average
   Horizontal Component of Peak Ground Motion and Response Spectra.
-  \emph{Earthquake Spectra} \bold{24,} 173--215. 
-
-  Kaklamanos, J., and L. G. Baise (2010).  Relationships between
-  Distance Measures in Recent Ground Motion Prediction Equations.
-  \emph{Seismological Research Letters} (in review).
+  \emph{Earthquake Spectra} \bold{24,} 173--215.
+  
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
+  Estimating Unknown Input Parameters when Implementing the NGA Ground
+  Motion Prediction Equations in Engineering Practice.
+  \emph{Earthquake Spectra} (in press).
 }
 \examples{
 

@@ -53,7 +53,7 @@
 #         0 otherwise); calculated from rake
 #   Fhw = Hanging wall flag (1 for site on hanging wall side of fault,
 #         0 otherwise); calculated from azimuth or Rx (if provided)
-#   azimuth = source-to-site azimuth (deg); see Figure 2 in Kaklamanos and Baise (2010)
+#   azimuth = source-to-site azimuth (deg); see Kaklamanos et al. (2011)
 #   Zhyp = hypocentral depth (km)
 #   Fas = Aftershock flag (1 for aftershocks, 0 for mainshocks)
 #   PGA1100 = median PGA when Vs30 = 1100 m/s
