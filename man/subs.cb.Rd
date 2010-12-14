@@ -53,7 +53,7 @@ SaMedian.cb(M, Rjb, Rrup, Ztor, Frv, Fnm, dip, Vs30, Z2.5, T)
   \item{dip}{Fault dip angle (deg).}
   \item{Vs30}{Time-averaged shear wave velocity over a subsurface
     depth of 30 meters (m/s).}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (km).}
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (km; \bold{note the units}).}
   \item{A1100}{Median PGA when \code{Vs30 = 1100 m/s} (g).}
   \item{T}{Spectral period (sec). Use 0 for PGA, -1 for PGV, and -2 for PGD.}
 }

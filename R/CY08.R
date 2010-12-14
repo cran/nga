@@ -1,7 +1,29 @@
-# CHIOU & YOUNGS NGA MODEL
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+# CY08.R:  CHIOU & YOUNGS NGA MODEL
 # Chiou, B. S.-J., and R. R. Youngs (2008). An NGA Model for the Average
 # Horizontal Component of Peak Ground Motion and Response Spectra.
 # Earthquake Spectra, Vol. 24, pp. 67-97.
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
 
 
 # OUTLINE OF CODE

@@ -14,7 +14,7 @@
 Fd.ba(M, Rjb, T)
 Fm.ba(M, U, SS, NS, RS, T)
 Fs.ba(M, Rjb, Vs30, U, SS, NS, RS, T)
-SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T)
+SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, AB11, T)
 }
 \arguments{
   \item{M}{Moment magnitude of earthquake.}
@@ -32,6 +32,9 @@ SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T)
   \item{SS}{Strike-slip style-of-faulting flag; equal to 1 for
     strike-slip faulting (when the rake is not in either of the ranges
     specified for \code{RS} or \code{NS}), and 0 otherwise.}
+  \item{AB11}{Flag variable equaling 1 if the Atkinson and Boore (2011)
+    small-magnitude correction factor should be applied to the BA08
+    model, and 0 otherwise.}
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{

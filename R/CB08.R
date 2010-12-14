@@ -1,7 +1,29 @@
-# CAMPBELL & BOZORGNIA NGA MODEL
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+# CB08.R:  CAMPBELL & BOZORGNIA NGA MODEL
 # Campbell, K. W., and Y. Bozorgnia. NGA Ground Motion Model for Geometric Mean
 # Horizontal Component of PGA, PGV, PGD, and 5% Damped Linear Elastic Response
 # Spectra for Periods Ranging from 0.01 to 10 s. Earthquake Spectra, Vol. 24, pp. 139-171.
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
 
 
 # OUTLINE OF CODE
@@ -723,10 +745,13 @@ Sa.cb <- function(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA, Ztor = 
         }
       }
     }
-    # Warn if Z2.5 is too low (user may have accidentally input in km
-    # instead of m)
-    if(Z2.5 <= 10)
-      warning("Z2.5 should be entered in meters to Sa.cb and Sa.nga")
+
+    # Warning for low Z2.5 removed 13 Dec 2010
+      #  Warn if Z2.5 is too low (user may have accidentally input in km
+      #  instead of m)
+      #    if(Z2.5 <= 10)
+      #      warning("Z2.5 should be entered in meters to Sa.cb and Sa.nga")
+    
     # Convert Z2.5 to km for use in the internal CB08 functions
     # (Added 27 Jul. 2010; Z2.5 is now input to Sa.cb in units of m)
     Z2.5 <- Z2.5 / 1000

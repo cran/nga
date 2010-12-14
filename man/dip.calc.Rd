@@ -3,8 +3,9 @@
 \title{Estimation of Fault Dip}
 \description{
   Estimates the fault dip angle from the style of faulting (using the
-  rake angle), from the guidelines Chiou and Youngs (2008) utilized in
-  developing their NGA model.
+  rake angle), following the explanation in Kaklamanos et al. (2011).
+  These recommendations are a modification of the guidelines Chiou and
+  Youngs (2008) utilized in developing their NGA model.
 }
 \usage{
 dip.calc(rake)
@@ -26,6 +27,11 @@ dip.calc(rake)
   Horizontal Component of Peak Ground Motion and Response Spectra,
   \emph{PEER Report No. 2008/09}, Pacific Earthquake Engineering
   Research Center, University of California, Berkeley.
+  
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
+  Unknown Input Parameters when Implementing the NGA Ground-Motion
+  Prediction Equations in Engineering Practice.
+  \emph{Earthquake Spectra} (in press).
 }
 \examples{
 # Estimated dip angle for a strike-slip fault

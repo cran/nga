@@ -17,7 +17,7 @@ Sa.as(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
       dip = NA, W = NA, Ztor = NA, Z1.0 = NA, rake = NA, Frv = NA,
       Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, Fas = 0)
 Sa.ba(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA,
-      NS = NA, RS = NA)
+      NS = NA, RS = NA, AB11 = 0)
 Sa.cb(M, Rjb, Vs30, epsilon, T, Rrup = NA, dip = NA, W = NA,
       Ztor = NA, Z1.0 = NA, Z1.5 = NA, Z2.5 = NA, rake = NA,
       Frv = NA, Fnm = NA, Fhw = NA, azimuth = NA, Zhyp = NA, arb = 0)
@@ -68,12 +68,12 @@ Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
   \item{Z1.5}{Depth to Vs = 1.5 km/s (m).  Z1.5 is not utilized in
     ground motion calculations, but if available, it may be used to
     estimate \code{Z2.5} for the CB08 model.}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (m).  If left empty, \code{Z2.5}
-    is estimated from \code{Z1.5} or \code{Z1.0} if available, using the
-    recommendations in Campbell and Bozorgnia (2007).  If neither
-    \code{Z1.5} nor \code{Z1.0} is available, then \code{Vs30} is used
-    to estimate \code{Z1.0} using \code{\link{Z1.calc.as}}, which is in
-    turn used to estimate \code{Z2.5}.}
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (m; \bold{note the units}). If left
+    empty, \code{Z2.5} is estimated from \code{Z1.5} or \code{Z1.0} if
+    available, using the recommendations in Campbell and Bozorgnia
+    (2007).  If neither \code{Z1.5} nor \code{Z1.0} is available, then
+    \code{Vs30} is used to estimate \code{Z1.0} using
+    \code{\link{Z1.calc.as}}, which is in turn used to estimate \code{Z2.5}.}
   \item{rake}{Rake angle of fault movement (deg).  Either the rake angle
     or the style-of-faulting flag variables (\code{Frv} and \code{Fnm}
     for AS08, CB08, and CY08; and \code{U}, \code{RS}, \code{NS}, and
@@ -127,6 +127,10 @@ Sa.cy(M, Rjb, Vs30, VsFlag, epsilon, T, Rrup = NA, Rx = NA,
     should be calculated for the arbitrary horizontal component of ground
     motion, and 0 if the standard deviation should be calculated for the
     geometric mean horizontal ground motion (the default).}
+  \item{AB11}{Flag variable equaling 1 if the Atkinson and Boore (2011)
+    small-magnitude correction factor should be applied to the BA08
+    model, and 0 otherwise.}
+  
 }
 \value{
   The spectral acceleration (in units of \emph{g}) at period T; peak
@@ -156,8 +160,9 @@ must be scalars.
   For procedures on estimating input variables when they are not known,
   see \code{\link{Rx.calc}}, \code{\link{Rrup.calc}},
   \code{\link{dip.calc}}, \code{\link{W.calc}}, \code{\link{Ztor.calc}},
-  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.  These procedures
-  are further described in Kaklamanos et al. (2011).
+  \code{\link{Z1.calc}}, \code{\link{Z2.5.calc}}, and
+  \code{\link{Zhyp.calc}}.
+  These procedures are further described in Kaklamanos et al. (2011).
 
   For details on the spectral periods and ground motion parameters
   defined for each of the models, see \code{\link{modelPeriods}} or
@@ -173,6 +178,10 @@ must be scalars.
   Abrahamson, N., and W. Silva (2008). Summary of the Abrahamson & Silva
   NGA Ground-Motion Relations. \emph{Earthquake Spectra} \bold{24,}
   67--97.
+
+  Atkinson, G. M., and D. M. Boore (2011). Modifications to Existing
+  Ground-Motion Prediction Equations in Light of New
+  Data. \emph{Bulletin of the Seismological Society of America}, in press.
   
   Boore, D. M., and G. M. Atkinson (2008). Ground-Motion Prediction
   Equations for the Average Horizontal Component of PGA, PGV, and
@@ -194,9 +203,9 @@ must be scalars.
   Horizontal Component of Peak Ground Motion and Response Spectra.
   \emph{Earthquake Spectra} \bold{24,} 173--215. 
   
-  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
-  Estimating Unknown Input Parameters when Implementing the NGA Ground
-  Motion Prediction Equations in Engineering Practice.
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
+  Unknown Input Parameters when Implementing the NGA Ground-Motion
+  Prediction Equations in Engineering Practice.
   \emph{Earthquake Spectra} (in press).
 }
 \examples{

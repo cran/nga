@@ -1,6 +1,29 @@
-# ABRAHAMSON & SILVA NGA MODEL
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+
+# AS08.R:  ABRAHAMSON & SILVA NGA MODEL
 # Abrahamson, N., and W. Silva (2008). Summary of the Abrahamson & Silva NGA Ground-Motion Relations.
 # Earthquake Spectra, Vol. 24, pp. 67-97.
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
 
 
 # OUTLINE OF CODE

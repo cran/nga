@@ -66,9 +66,9 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
 \author{James Kaklamanos <james.kaklamanos@tufts.edu> and
   Eric M. Thompson <eric.thompson@tufts.edu>}
 \references{
-  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
-  Estimating Unknown Input Parameters when Implementing the NGA Ground
-  Motion Prediction Equations in Engineering Practice.
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
+  Unknown Input Parameters when Implementing the NGA Ground-Motion
+  Prediction Equations in Engineering Practice.
   \emph{Earthquake Spectra} (in press).
 }
 \examples{

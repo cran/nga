@@ -1,6 +1,29 @@
-# BOORE & ATKINSON NGA MODEL
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+
+# BA08.R:  BOORE & ATKINSON NGA MODEL
 # Boore, D. M., and G. M. Atkinson (2008). Ground-Motion Prediction Equations for Average
 # Horizontal Component of PGA, PGV, and PSA. Earthquake Spectra, Vol. 24, pp. 99-138.
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
 
 
 # OUTLINE OF CODE
@@ -38,6 +61,8 @@
 #   SS = Strike-slip style-of-faulting flag; equal to 1 for strike-slip faulting
 #        (when the rake is not in either of the ranges specified for RS or NS),
 #        and 0 otherwise.
+#   AB11 = flag variable equaling 1 if the Atkinson and Boore (2011) small-magnitude
+#          correction factor should be applied, and 0 otherwise
 
 
 # OUTPUT PARAMETERS (from Sa function):
@@ -372,9 +397,21 @@ Fs.ba <- function(M, Rjb, Vs30, U, SS, NS, RS, T)
 
 
 # 3. MEDIAN GROUND MOTION CALCULATION of Sa, PGA, and PGV  (Eqn 1)
-SaMedian.ba <- function(M, Rjb, Vs30, U, SS, NS, RS, T) {
+#    Updated 13 Dec. 2010 to include AB11 update
+SaMedian.ba <- function(M, Rjb, Vs30, U, SS, NS, RS, AB11, T) {
+
+  #  BA08 calculation
   SaMedian <- exp(Fm.ba(M, U, SS, NS, RS, T) + Fd.ba(M, Rjb, T) +
                   Fs.ba(M, Rjb, Vs30, U, SS, NS, RS, T))
+
+  #  Correction factor, Fba08 (Eqn 5 in Atkinson and Boore, 2011)
+  logFba08 <- max(0, 3.888 - 0.674*M) - max(0, 2.933 - 0.510*M)*log10(Rjb + 10)
+  Fba08 <- 10^(logFba08)
+
+  #  If AB11 = 1, apply correction to SaMedian
+  if(AB11 == 1)
+    SaMedian <- SaMedian*Fba08
+  
   return(SaMedian)
 }
 
@@ -382,12 +419,12 @@ SaMedian.ba <- function(M, Rjb, Vs30, U, SS, NS, RS, T) {
 
 
 # 4. FINAL FUNCTION FOR BA08 GROUND MOTION CALCULATIONS
-Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA, RS = NA){
+Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA, RS = NA, AB11 = 0){
 
   # If T is a vector, perform calculation for each of the elements
   if(length(T) > 1) {
     return(sapply(T, Sa.ba, M = M, Rjb = Rjb, Vs30 = Vs30, epsilon = epsilon,
-                  rake = rake, U = U, SS = SS, NS = NS, RS = RS))
+                  rake = rake, U = U, SS = SS, NS = NS, RS = RS, AB11 = AB11))
 
   # Perform calculation for single value of T:
   } else {
@@ -473,7 +510,7 @@ Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA,
     # If interpolation is not necessary, compute Sa
     if(interp == FALSE){
       # Compute median
-      LnSaMedian <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T))
+      LnSaMedian <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, AB11, T))
       # Compute SD, depending on whether or not the fault mechanism is specified
       if(U == 0)
         epsilon.sigmaTot <- epsilon * SigmaTotM.ba(T)   # Specified fault mechanism
@@ -490,7 +527,7 @@ Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA,
         T2 <- getPeriod(T, "BA08")$upper    
       
         # Calculation for T1
-        LnSaMedian.T1 <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T1))
+        LnSaMedian.T1 <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, AB11, T1))
         if(U == 0)
           epsilon.sigmaTot.T1 <- epsilon * SigmaTotM.ba(T1)   # Specified fault mechanism
         else
@@ -498,7 +535,7 @@ Sa.ba <- function(M, Rjb, Vs30, epsilon, T, rake = NA, U = NA, SS = NA, NS = NA,
         LnSaT1 <- LnSaMedian.T1 + epsilon.sigmaTot.T1
       
         # Calculation for T2
-        LnSaMedian.T2 <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, T2))
+        LnSaMedian.T2 <- log(SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, AB11, T2))
         if(U == 0)
           epsilon.sigmaTot.T2 <- epsilon * SigmaTotM.ba(T2)   # Specified fault mechanism
         else

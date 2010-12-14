@@ -1,8 +1,31 @@
-# GROUND MOTION COMPUTATIONS FOR ALL NGA MODELS
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+
+# NGA.R:  GROUND MOTION COMPUTATIONS FOR ALL NGA MODELS
 #   Abrahamson and Silva (2008)
 #   Boore and Atkinson (2008)
 #   Campbell and Bozorgnia (2008)
 #   Chiou and Youngs (2008)
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
 
 
 # Function  Sa.nga
@@ -99,22 +122,14 @@
 #       sdMeas.as = total standard deviation using AS08, for measured Vs30 (VsFlag = 1)
 #       sdEst.as = total standard deviation using AS08, for estimated Vs30 (VsFlag = 0)
 #     BA08 Model:
-#       Y50M.ba = Median ground motion estimate using BA08,
-#                 when the fault type is specified (U = 0)
-#       Y50U.ba = Median ground motion estimate using BA08
-#                 when the fault type is unspecified (U = 1)
-#       YplusEpsilon.M.ba = Upper bound estimate of ground motion using BA08,
-#                           when the fault type is specified (U = 0)
-#       YplusEpsilon.U.ba = Upper bound estimate of ground motion using BA08,
-#                           when the fault type is unspecified (U = 1)
-#       YminusEpsilon.M.ba = Lower bound estimate of ground motion using BA08,
-#                            when the fault type is specified (U = 0)
-#       YminusEpsilon.U.ba = Lower bound estimate of ground motion using BA08,
-#                            when the fault type is unspecified (U = 1)
-#       sdM.ba = total standard deviation using BA08,
-#                when the fault type is specified (U = 0)
-#       sdU.ba = total standard deviation using BA08,
-#                when the fault type is unspecified (U = 1)
+#       Y50.ba = Median ground motion estimate using BA08
+#       Y50mod.ba = Median ground motion estimate using BA08, with the small-magnitude
+#                 correction factor of Atkinson and Boore (2011) applied
+#       YplusEpsilon.ba = Upper bound estimate of ground motion using BA08
+#       YplusEpsilon.mod.ba = Upper bound estimate of ground motion using modified BA08
+#       YminusEpsilon.ba = Lower bound estimate of ground motion using BA08
+#       YminusEpsilon.mod.ba = Lower bound estimate of ground motion using modified BA08
+#       sd.ba = total standard deviation using BA08
 #     CB08 Model:
 #       Y50.cb = Median ground motion estimate using CB08 (epsilon = 0)
 #       YplusEpsilon.GM.cb = Upper bound estimate of ground motion using CB08, for the 
@@ -417,14 +432,15 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
                      Z1.0 = Z1.0as, VsFlag = 0, Fas = Fas, Zhyp = Zhyp,
                      azimuth = azimuth, epsilon = 0, T = T)
   
-    # Specified fault mechanism
-    Y50M.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+    # BA08
+    Y50.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
                      SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
-                     RS = Frv1, epsilon = 0, T = T)
+                     RS = Frv1, epsilon = 0, T = T, AB11 = 0)
 
-    # Unspecified fault mechanism
-    Y50U.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = NA, U = 1,
-                     SS = 0, NS = 0, RS = 0, epsilon = 0, T = T)
+    # Modified BA08 (Atkinson and Boore, 2011)
+    Y50mod.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+                       SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
+                       RS = Frv1, epsilon = 0, T = T, AB11 = 1)
     
     Y50.cb <- Sa.cb(M = M, Rjb = Rjb, Rrup = Rrup, rake = rake, Frv = Frv2, Fnm = Fnm3,
                     dip = dip, W = W, Ztor = Ztor, Vs30 = Vs30, Z1.0 = Z1.0as,
@@ -464,13 +480,14 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
                                   epsilon = epsilon, T = T) 
 
     # BA08
-    # Specified fault type
-    YplusEpsilon.M.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+    # Unmodified
+    YplusEpsilon.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
                                SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
-                               RS = Frv1, epsilon = epsilon, T = T)
-    # Unspecified fault type
-    YplusEpsilon.U.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = NA, U = 1,
-                               SS = 0, NS = 0, RS = 0, epsilon = epsilon, T = T)
+                               RS = Frv1, epsilon = epsilon, T = T, AB11 = 0)
+    # Modified
+    YplusEpsilon.mod.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+                                 SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
+                                 RS = Frv1, epsilon = epsilon, T = T, AB11 = 1)
 
     # CB08
     # Geometric mean horizontal component
@@ -518,13 +535,14 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
                                    epsilon = -epsilon, T = T) 
 
     # BA08
-    # Specified fault type
-    YminusEpsilon.M.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+    # Unmodified
+    YminusEpsilon.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
                                 SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
-                                RS = Frv1, epsilon = -epsilon, T = T)
-    # Unspecified fault type
-    YminusEpsilon.U.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = NA, U = 1,
-                                SS = 0, NS = 0, RS = 0, epsilon = -epsilon, T = T)
+                                RS = Frv1, epsilon = -epsilon, T = T, AB11 = 0)
+    # Modified
+    YminusEpsilon.mod.ba <- Sa.ba(M = M, Rjb = Rjb, Vs30 = Vs30, rake = rake, U = 0,
+                                  SS = if(Frv1 == 0 & Fnm2 == 0) 1 else 0, NS = Fnm2,
+                                  RS = Frv1, epsilon = -epsilon, T = T, AB11 = 1)
 
     # CB08
     # Geometric mean horizontal component
@@ -558,8 +576,7 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
     # Standard Deviations (log space)
     sdMeas.as <- (log(YplusEpsilon.meas.as) - log(Y50.as)) / epsilon
     sdEst.as <- (log(YplusEpsilon.est.as) - log(Y50.as)) / epsilon
-    sdM.ba <- (log(YplusEpsilon.M.ba) - log(Y50M.ba)) / epsilon
-    sdU.ba <- (log(YplusEpsilon.U.ba) - log(Y50U.ba)) / epsilon
+    sd.ba <- (log(YplusEpsilon.ba) - log(Y50.ba)) / epsilon
     sdGM.cb <- (log(YplusEpsilon.GM.cb) - log(Y50.cb)) / epsilon
     sdArb.cb <- (log(YplusEpsilon.arb.cb) - log(Y50.cb)) / epsilon
     sdMeas.cy <- (log(YplusEpsilon.meas.cy) - log(Y50.cy)) / epsilon
@@ -571,10 +588,10 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
       YplusEpsilon.est.as = Y50.as
       YminusEpsilon.meas.as = Y50.as
       YminusEpsilon.est.as = Y50.as
-      YplusEpsilon.M.ba = Y50M.ba
-      YplusEpsilon.U.ba = Y50U.ba
-      YminusEpsilon.M.ba = Y50M.ba
-      YminusEpsilon.U.ba = Y50U.ba
+      YplusEpsilon.ba = Y50.ba
+      YplusEpsilon.mod.ba = Y50mod.ba
+      YminusEpsilon.ba = Y50.ba
+      YminusEpsilon.mod.ba = Y50mod.ba
       YplusEpsilon.GM.cb = Y50.cb
       YplusEpsilon.arb.cb = Y50.cb
       YminusEpsilon.GM.cb = Y50.cb
@@ -629,14 +646,13 @@ Sa.nga <- function(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA, Ztor =
                       YminusEpsilon.est.as = YminusEpsilon.est.as,
                       sdMeas.as = sdMeas.as,
                       sdEst.as = sdEst.as,
-                      Y50M.ba = Y50M.ba,
-                      Y50U.ba = Y50U.ba,
-                      YplusEpsilon.M.ba = YplusEpsilon.M.ba,
-                      YplusEpsilon.U.ba = YplusEpsilon.U.ba,
-                      YminusEpsilon.M.ba = YminusEpsilon.M.ba,
-                      YminusEpsilon.U.ba = YminusEpsilon.U.ba,
-                      sdM.ba = sdM.ba,
-                      sdU.ba = sdU.ba,
+                      Y50.ba = Y50.ba,
+                      Y50mod.ba = Y50mod.ba,
+                      YplusEpsilon.ba = YplusEpsilon.ba,
+                      YplusEpsilon.mod.ba = YplusEpsilon.mod.ba,
+                      YminusEpsilon.ba = YminusEpsilon.ba,
+                      YminusEpsilon.mod.ba = YminusEpsilon.mod.ba,
+                      sd.ba = sd.ba,
                       Y50.cb = Y50.cb,
                       YplusEpsilon.GM.cb = YplusEpsilon.GM.cb,
                       YplusEpsilon.arb.cb = YplusEpsilon.arb.cb,            

@@ -120,9 +120,9 @@ data(KBflatfile)
   \emph{Bulletin of the Seismological Society of America}, vol. 101,
   no. 1 (in press).
 
-  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
-  Estimating Unknown Input Parameters when Implementing the NGA Ground
-  Motion Prediction Equations in Engineering Practice.
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
+  Unknown Input Parameters when Implementing the NGA Ground-Motion
+  Prediction Equations in Engineering Practice.
   \emph{Earthquake Spectra} (in press).  
 }
 \keyword{datasets}
@@ -190,7 +190,7 @@ ResultsMatrix <- Sa.nga(M = M, dip = dip, rake = rake, Ztor = Ztor,
 
 # Access individual columns of the data frame using the "$" operator:
 SaAS08 <- ResultsMatrix$Y50.as
-SaBA08 <- ResultsMatrix$Y50M.ba
+SaBA08 <- ResultsMatrix$Y50.ba
 SaCB08 <- ResultsMatrix$Y50.cb
 SaCY08 <- ResultsMatrix$Y50.cy
 
@@ -271,7 +271,7 @@ for(i in 1:length(Rjb.plot)){
 
 # Access individual columns of the data frame using the "$" operator:
 pgaAS08 <- ResultsMatrix2$Y50.as
-pgaBA08 <- ResultsMatrix2$Y50M.ba
+pgaBA08 <- ResultsMatrix2$Y50.ba
 pgaCB08 <- ResultsMatrix2$Y50.cb
 pgaCY08 <- ResultsMatrix2$Y50.cy
 
@@ -332,7 +332,7 @@ for(i in 1:length(n)){
                           azimuth = azimuth[i], Vs30 = Vs30[i],
                           epsilon = 0, T = 0)
   pgaAS08[i] <- ResultsMatrix$Y50.as
-  pgaBA08[i] <- ResultsMatrix$Y50M.ba
+  pgaBA08[i] <- ResultsMatrix$Y50.ba
   pgaCB08[i] <- ResultsMatrix$Y50.cb
   pgaCY08[i] <- ResultsMatrix$Y50.cy
 }

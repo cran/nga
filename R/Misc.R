@@ -1,4 +1,28 @@
-# MISCELLANEOUS FUNCTIONS NEEDED FOR MULTIPLE NGA MODELS
+# IMPLEMENTATION OF THE NEXT GENERATION ATTENUATION (NGA)
+# GROUND-MOTION PREDICTION EQUATIONS IN R
+
+
+# Misc.R:  MISCELLANEOUS FUNCTIONS NEEDED FOR MULTIPLE NGA MODELS
+
+
+# James Kaklamanos
+# Tufts University
+# Department of Civil and Environmental Engineering
+# James.Kaklamanos@tufts.edu
+# http://geohazards.cee.tufts.edu/people/jkakla01
+# December 14, 2010
+
+# For further details, see the following papers:
+# o  Kaklamanos, J., D. M. Boore, E. M. Thompson, and K. W. Campbell (2010).
+#    Implementation of the Next Generation Attenuation (NGA) ground-motion
+#    prediction equations in Fortran and R, U.S. Geological Survey Open-File
+#    Report 2010-1296.
+# o  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). Estimating unknown input
+#    parameters when implementing the NGA ground-motion prediction equations in
+#    engineering practice, Earthquake Spectra, in press.
+
+
+
 
 # OUTLINE OF CODE:
 # This code contains functions that are needed for multiple NGA models, including:
@@ -9,6 +33,7 @@
 # 5. Calculation of depth to top of rupture, Ztor
 # 6. Calculation of dip angle
 # 7. Calculation of down-dip width, W
+# 8. Calculation of depth parameter, Z2.5
 
 
 
@@ -93,7 +118,7 @@ interpolate <- function(x, x1, x2, y1, y2){
 # 2. CALCULATION OF DISTANCE MEASURES (Rx and Rrup)
 # For details on these derived equations (and on the estimation of other input
 # parameters), please see the following paper:
-# Kaklamanos, J., L. G. Baise, and D. M. Boore (2011). A Framework for Estimating
+# Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
 # Unknown Input Parameters when Implementing the NGA Ground Motion Prediction
 # Equations in Engineering Practice. Earthquake Spectra (in press).
 # The equation numbers and figures in this code refer to the equation numbers
@@ -132,7 +157,7 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
     if(azimuth == 90 | Rjb == 0){
 
       # Rjb > 0
-      # Case 6 in Figure 4 (Eqn 11)
+      # Case 6 in Figure 3 (Eqn 9)
       if(Rjb > 0)
         Rx <- Rjb + W*cos(d)
 
@@ -141,10 +166,10 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
         
         # If Rrup is known, then calculate Rx from Rrup
         if(is.na(Rrup) == FALSE){
-          # Case 5A in Figure 4 (Eqn 12)
+          # Case 5A in Figure 3 (Eqn 10)
           if(Rrup < Ztor*sec(d))
             Rx <- sqrt(Rrup^2 - Ztor^2)
-          # Case 5B in Figure 4 (Eqn 13)
+          # Case 5B in Figure 3 (Eqn 11)
           else{
             if(Rrup >= Ztor*sec(d))
               Rx <- Rrup*csc(d) - Ztor*cot(d)
@@ -152,7 +177,7 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
         }
 
         # If Rrup is unknown, assume that the site is located at the
-        # center of the surface projection of the ruptured area (Eqn 7)
+        # center of the surface projection of the ruptured area (Eqn 5)
         else
           Rx <- W*cos(d)/2
       }
@@ -160,24 +185,24 @@ Rx.calc <- function(Rjb, Ztor, W, dip, azimuth, Rrup = NA){
     } else{
       if(azimuth >= 0 & azimuth != 90) {
         
-        # Cases 2 and 8 (Eqn 9)
+        # Cases 2 and 8 (Eqn 7)
         if(Rjb*abs(tan(a)) <= W*cos(d)){
           Rx <- Rjb*abs(tan(a))
 
-        # Cases 3 and 9 (Eqn 10)
+        # Cases 3 and 9 (Eqn 8)
         } else{
           if(Rjb*abs(tan(a)) > W*cos(d)){
             Rx <- Rjb*tan(a)*cos(a - asin(W*cos(d)*cos(a)/Rjb)) }
         }
       
-      # Cases 1, 4, and 7 (Eqn 14)
+      # Cases 1, 4, and 7 (Eqn 12)
       } else{
         if(azimuth >= -180 & azimuth < 0)
           Rx <- Rjb*sin(a)
       }
     }
 
-  # Special case for vertical faults (Eqn 15)
+  # Special case for vertical faults (Eqn 13)
   } else{
     if(dip == 90)
       Rx <- Rjb*sin(a)
@@ -207,7 +232,7 @@ Rrup.calc <- function(Rx, Ztor, W, dip, azimuth, Rjb = NA) {
   d <- dip*pi/180
   a <- azimuth*pi/180
 
-  # Shortcut calculation for vertical faults, if Rjb is entered (Eqn 23)
+  # Shortcut calculation for vertical faults, if Rjb is entered (Eqn 21)
   if(dip == 90 & is.na(Rjb) == FALSE){
     return(sqrt(Rjb^2 + Ztor^2))
   }
@@ -216,16 +241,16 @@ Rrup.calc <- function(Rx, Ztor, W, dip, azimuth, Rjb = NA) {
   # Calculate Rrup'
   if(dip != 90){
 
-    # Zone A in Figure 5 (Eqn 17)
+    # Zone A in Figure 4 (Eqn 15)
     if(Rx < Ztor*tan(d)){
       Rrup.prime <- sqrt(Rx^2 + Ztor^2)
       
-    # Zone B in Figure 5 (Eqn 18)
+    # Zone B in Figure 4 (Eqn 16)
     } else{
       if(Rx >= Ztor*tan(d) & Rx <= Ztor*tan(d) + W*sec(d)){
         Rrup.prime <- Rx*sin(d) + Ztor*cos(d)
         
-      # Zone C in Figure 5 (Eqn 19)
+      # Zone C in Figure 4 (Eqn 17)
       } else{
         if(Rx > Ztor*tan(d) + W*sec(d)){
           Rrup.prime <- sqrt((Rx - W*cos(d))^2 + (Ztor + W*sin(d))^2)
@@ -233,17 +258,17 @@ Rrup.calc <- function(Rx, Ztor, W, dip, azimuth, Rjb = NA) {
       }
     }
   } else if(dip == 90)  # Vertical faults, if Rjb is not entered
-                        # (equivalent to Eqn 23)    
+                        # (equivalent to Eqn 21)    
     {Rrup.prime <- sqrt(Rx^2 + Ztor^2)}
 
 
   # Calculate Ry
 
-  # Eqn 20
+  # Eqn 18
   if(azimuth == 90 | azimuth == -90){
     Ry <- 0
   
-  # Eqn 21
+  # Eqn 19
   } else{
     if(azimuth == 0 | azimuth == 180 | azimuth == -180){
       if(is.na(Rjb) == TRUE)
@@ -251,13 +276,13 @@ Rrup.calc <- function(Rx, Ztor, W, dip, azimuth, Rjb = NA) {
       else
         Ry <- Rjb
       
-    # Eqn 22
+    # Eqn 20
     } else{
       Ry <- abs(Rx*cot(a))
     }
   }
 
-  # Calculate Rrup (Eqn 16)
+  # Calculate Rrup (Eqn 14)
   Rrup <- sqrt(Rrup.prime^2 + Ry^2)
   
   return(Rrup)
@@ -369,7 +394,7 @@ dip.calc <- function(rake) {
   # Normal fault
   } else{
     if(rake <= -30 & rake >= -150){
-      dip <- 55
+      dip <- 50
 
     # Reverse fault
     } else{
@@ -411,5 +436,44 @@ W.calc <- function(M, rake){
     }
   }
   return(W)
+}
+
+
+
+
+
+# 8. CALCULATION OF DEPTH PARAMETER, Z2.5
+
+Z2.5.calc <- function(Vs30 = NA, Z1.0 = NA, Z1.5 = NA){
+
+  # Check input
+  if(is.na(Vs30) == FALSE & Vs30 < 0)
+    stop("Vs30 must be a positive number")
+  if(is.na(Z1.0) == FALSE & Z1.0 < 0)
+    stop("Z1.0 must be a positive number")
+  if(is.na(Z1.5) == FALSE & Z1.5 < 0)
+    stop("Z1.5 must be a positive number")
+  if(is.na(Vs30) == TRUE & is.na(Z1.0) == TRUE & is.na(Z1.5) == TRUE)
+    stop("Either Vs30, Z1.0, or Z1.5 must be specified.")
+
+  # First choice: calculate from Z1.5 if available
+  if(is.na(Z1.5) == FALSE){
+    Z2.5 <- 636 + 1.549*Z1.5
+
+  # Second choice: calculate from Z1.0
+  } else{
+    if(is.na(Z1.0) == FALSE){
+      Z2.5 <- 519 + 3.595*Z1.0
+
+  # Third choice: calculate from Vs30
+    } else{
+      if(is.na(Vs30) == FALSE){
+        Z1.0 <- Z1.calc.as(Vs30 = Vs30)
+        Z2.5 <- 519 + 3.595*Z1.0
+      }
+    }
+  }
+
+  return(Z2.5)
 }
 

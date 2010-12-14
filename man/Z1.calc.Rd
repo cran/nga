@@ -22,7 +22,7 @@ Z1.calc.cy(Vs30)
   horizon of Vs = 1.0 km/s  (m).
 }
 \seealso{
-  \code{\link{Sa}}, \code{\link{Sa.nga}}.
+  \code{\link{Sa}}, \code{\link{Sa.nga}}, \code{\link{Z2.5.calc}}.
 }
 \author{James Kaklamanos <james.kaklamanos@tufts.edu> and
   Eric M. Thompson <eric.thompson@tufts.edu>}

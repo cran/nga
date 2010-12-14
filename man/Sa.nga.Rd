@@ -52,12 +52,13 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
   \item{Z1.5}{Depth to Vs = 1.5 km/s (m).  \code{Z1.5} is not utilized in
     ground motion calculations, but if available, it may be used to
     estimate \code{Z2.5} for the CB08 model.}
-  \item{Z2.5}{Depth to Vs = 2.5 km/s (m).  If left empty, \code{Z2.5} is
-    estimated from \code{Z1.5} or \code{Z1.0} if available, using the
-    recommendations in Campbell and Bozorgnia (2007).  If neither
-    \code{Z1.5} nor \code{Z1.0} is available, then \code{Vs30} is used
-    to estimate \code{Z1.0} using \code{\link{Z1.calc.as}}, which is in
-    turn used to estimate \code{Z2.5}.}
+  \item{Z2.5}{Depth to Vs = 2.5 km/s (m; \bold{note the units}).  If
+    left empty, \code{Z2.5} is estimated from \code{Z1.5} or \code{Z1.0}
+    if available, using the recommendations in Campbell and Bozorgnia
+    (2007); see \code{\link{Z2.5.calc}}.  If neither \code{Z1.5} nor
+    \code{Z1.0} is available, then \code{Vs30} is used to estimate
+    \code{Z1.0} using \code{\link{Z1.calc.as}}, which is in turn used to
+    estimate \code{Z2.5}.}
   \item{rake}{Rake angle of fault movement (deg).  Either the rake angle
     or the style-of-faulting flag variables (\code{Frv} and \code{Fnm})
     must be specified.}
@@ -96,7 +97,7 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
 }
 \value{
   The function \code{Sa.nga} outputs a data frame composed of the
-  following 63 columns:
+  following 62 columns:
 
   \bold{Input Variables:}
   \tabular{ll}{
@@ -167,22 +168,18 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
     \code{sdEst.as} \tab total standard deviation using AS08, for
     estimated \code{Vs30} (\code{VsFlag = 0}) \cr
     \bold{BA08 Model:} \tab  \cr
-    \code{Y50M.ba} \tab Median ground motion estimate using BA08, when
-    fault type is specified (\code{U = 0}) \cr
-    \code{Y50U.ba} \tab Median ground motion estimate using BA08, when
-    fault type is unspecified (\code{U = 1}) \cr
-    \code{YplusEpsilon.M.ba} \tab Upper ground motion estimate
-    using BA08, when fault type is specified (\code{U = 0}) \cr
-    \code{YplusEpsilon.U.ba} \tab Upper ground motion estimate
-    using BA08, when fault type is unspecified (\code{U = 1}) \cr
-    \code{YminusEpsilon.M.ba} \tab Lower ground motion estimate
-    using BA08, when fault type is specified (\code{U = 0}) \cr
-    \code{YminusEpsilon.U.ba} \tab Lower ground motion estimate
-    using BA08, when fault type is unspecified (\code{U = 1}) \cr
-    \code{sdM.ba} \tab total standard deviation using BA08, when
-    fault type is specified (\code{U = 0}) \cr
-    \code{sdU.ba} \tab total standard deviation using BA08, when
-    fault type is unspecified (\code{U = 1}) \cr
+    \code{Y50.ba} \tab Median ground motion estimate using BA08 \cr
+    \code{Y50mod.ba} \tab Median ground motion estimate using modified
+    BA08 (\code{AB11 = 1}) \cr
+    \code{YplusEpsilon.ba} \tab Upper ground motion estimate
+    using BA08 \cr
+    \code{YplusEpsilon.mod.ba} \tab Upper ground motion estimate
+    using modified BA08 (\code{AB11 = 1}) \cr
+    \code{YminusEpsilon.ba} \tab Lower ground motion estimate
+    using BA08 \cr
+    \code{YminusEpsilon.mod.ba} \tab Lower ground motion estimate
+    using modified BA08 (\code{AB11 = 1}) \cr
+    \code{sd.ba} \tab total standard deviation using BA08 \cr
     \bold{CB08 Model:} \tab  \cr
     \code{Y50.cb} \tab Median ground motion estimate using CB08 (\code{epsilon}
     = 0) \cr
@@ -236,15 +233,11 @@ used to obtain predictions for PGD.  In addition, \dQuote{sd} refers to
 the standard deviation of the ground motion estimate, which is presented
 in natural log space.
 
-The flag variables \code{VsFlag}, \code{U}, and \code{arb} refer to:
+The flag variables \code{VsFlag} and \code{arb} refer to:
 
 \code{VsFlag} = Flag variable indicating how \code{Vs30} is obtained
 (AS08 and CY08 models only); equal to 1 if \code{Vs30} is measured,
 and 0 if \code{Vs30} is estimated or inferred.
-
-\code{U} = Unspecified style-of-faulting flag for the BA08 model; equal
-to 1 if the user wishes to perform a generic ground motion
-calculation when the style of faulting is unspecified.
 
 \code{arb} = Flag variable indicating the method of determining aleatory
 uncertainty for the CB08 model; equal to 1 if the standard deviation
@@ -252,19 +245,25 @@ should be calculated for the arbitrary horizontal component of ground
 motion, and 0 if the standard deviation should be calculated for the
 geometric mean horizontal ground motion.
 
-These three indicator variables represent model-specific options for
+These two indicator variables represent model-specific options for
 output: AS08 and CY08 have different standard deviation terms for
-measured and inferred Vs30 (specified by \code{VsFlag}), BA08 is the
-only model that offers predictions for unspecified styles of faulting
-(\code{U}), and CB08 is the only model that offers predictions for the
-arbitrary horizontal component of ground motion (\code{arb}).  For
-each case (0 and 1) of each of these three indicator variables,
-\code{Sa.nga} provides the estimated ground motion.  This output is
-consistent with that of the Fortran program described later in this
-report.  The model-specific functions \code{\link{Sa.as}},
-\code{\link{Sa.ba}}, \code{\link{Sa.cb}}, and \code{\link{Sa.cy}}
-allow the user to specify the values of the indicator variables in the
-arguments to the functions.
+measured and inferred Vs30 (specified by \code{VsFlag}), and CB08 is the
+only model that offers predictions for the arbitrary horizontal
+component of ground motion (\code{arb}).  For each case (0 and 1) of
+each of these three indicator variables, \code{Sa.nga} provides the
+estimated ground motion.  This output is consistent with that of the
+Fortran program described later in this report.
+The model-specific functions \code{\link{Sa.as}}, \code{\link{Sa.ba}},
+\code{\link{Sa.cb}}, and \code{\link{Sa.cy}} allow the user to specify
+the values of the indicator variables in the arguments to the functions.
+
+The median BA08 estimate is presented in terms of the original GMPE
+(Boore and Atkinson, 2008) as well as the modified GMPE given by
+Atkinson and Boore (2011).  The small-magnitude modification affects
+ground motion estimates for \code{M <= 5.75}.  The modified BA08 model
+corresponds to \code{AB11 = 1} in the \code{\link{Sa.ba}} function, and
+the original BA08 model corresponds to \code{AB11 = 0}.
+
 }
 \seealso{
   See \code{\link{Sa.as}}, \code{\link{Sa.ba}}, \code{\link{Sa.cb}}, and
@@ -284,8 +283,9 @@ arguments to the functions.
   For procedures on estimating input variables when they are not known,
   see \code{\link{Rx.calc}}, \code{\link{Rrup.calc}},
   \code{\link{dip.calc}}, \code{\link{W.calc}}, \code{\link{Ztor.calc}},
-  \code{\link{Z1.calc}}, and \code{\link{Zhyp.calc}}.  These procedures
-  are further described in Kaklamanos et al. (2011).
+  \code{\link{Z1.calc}}, \code{\link{Z2.5.calc}}, and
+  \code{\link{Zhyp.calc}}.  These procedures are further described in
+  Kaklamanos et al. (2011).
 
   For details on the spectral periods and ground motion parameters
   defined for each of the models, see \code{\link{modelPeriods}} or
@@ -302,6 +302,10 @@ arguments to the functions.
   NGA Ground-Motion Relations. \emph{Earthquake Spectra} \bold{24,}
   67--97.
   
+  Atkinson, G. M., and D. M. Boore (2011). Modifications to Existing
+  Ground-Motion Prediction Equations in Light of New
+  Data. \emph{Bulletin of the Seismological Society of America} (in press).
+    
   Boore, D. M., and G. M. Atkinson (2008). Ground-Motion Prediction
   Equations for the Average Horizontal Component of PGA, PGV, and
   5\%-Damped PSA at Spectral Periods between 0.01 s and 10.0
@@ -322,9 +326,9 @@ arguments to the functions.
   Horizontal Component of Peak Ground Motion and Response Spectra.
   \emph{Earthquake Spectra} \bold{24,} 173--215.
   
-  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  A Framework for
-  Estimating Unknown Input Parameters when Implementing the NGA Ground
-  Motion Prediction Equations in Engineering Practice.
+  Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
+  Unknown Input Parameters when Implementing the NGA Ground-Motion
+  Prediction Equations in Engineering Practice.
   \emph{Earthquake Spectra} (in press).
 }
 \examples{
