@@ -20,7 +20,8 @@ periods.cy(positive = FALSE)
     whether or not to return only positive periods (i.e., spectral
     periods 0.01 sec and greater), excluding PGA (\code{T = 0}), PGV
     (\code{T = -1}), and PGD (\code{T = -2}, in the case of CB08) from the
-    list.}
+    list.  If \code{positive = FALSE}, the periods corresponding to
+    PGA, PGV, and PGD (for the CB08 model) are appended to the list.}
 }
 \details{
   The purpose of the \code{positive} argument is to separate spectral

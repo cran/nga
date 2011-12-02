@@ -181,7 +181,8 @@ must be scalars.
 
   Atkinson, G. M., and D. M. Boore (2011). Modifications to Existing
   Ground-Motion Prediction Equations in Light of New
-  Data. \emph{Bulletin of the Seismological Society of America}, in press.
+  Data. \emph{Bulletin of the Seismological Society of America},
+  \bold{101,} 1121--1135.
   
   Boore, D. M., and G. M. Atkinson (2008). Ground-Motion Prediction
   Equations for the Average Horizontal Component of PGA, PGV, and
@@ -206,7 +207,7 @@ must be scalars.
   Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
   Unknown Input Parameters when Implementing the NGA Ground-Motion
   Prediction Equations in Engineering Practice.
-  \emph{Earthquake Spectra} (in press).
+  \emph{Earthquake Spectra} \bold{27,} 1219--1235.
 }
 \examples{
 

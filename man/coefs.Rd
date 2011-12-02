@@ -60,7 +60,6 @@ coefs.cy()
 
   Chiou, B. S.-J., and R. R. Youngs (2008). An NGA Model for the Average
   Horizontal Component of Peak Ground Motion and Response Spectra.
-  \emph{Earthquake Spectra} \bold{24,} 173--215. 
-  Boore DM, Atkinson, GM (2008).
+  \emph{Earthquake Spectra} \bold{24,} 173--215.
 }
 \keyword{internal}

@@ -31,7 +31,7 @@ dip.calc(rake)
   Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
   Unknown Input Parameters when Implementing the NGA Ground-Motion
   Prediction Equations in Engineering Practice.
-  \emph{Earthquake Spectra} (in press).
+  \emph{Earthquake Spectra} \bold{27,} 1219--1235.
 }
 \examples{
 # Estimated dip angle for a strike-slip fault

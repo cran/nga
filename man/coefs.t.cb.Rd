@@ -76,6 +76,5 @@ rho.cb(T)
   the Geometric Mean Horizontal Component of PGA, PGV, PGD, and 5\%
   Damped Linear Elastic Response Spectra for Periods Ranging from 0.01
   to 10 s. \emph{Earthquake Spectra} \bold{24,} 139--171.
-  Boore DM, Atkinson, GM (2008).
 }
 \keyword{internal}

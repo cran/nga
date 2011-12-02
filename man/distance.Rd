@@ -69,7 +69,7 @@ Rrup.calc(Rx, Ztor, W, dip, azimuth, Rjb = NA)
   Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
   Unknown Input Parameters when Implementing the NGA Ground-Motion
   Prediction Equations in Engineering Practice.
-  \emph{Earthquake Spectra} (in press).
+  \emph{Earthquake Spectra} \bold{27,} 1219--1235.
 }
 \examples{
 #########################################################################
@@ -123,7 +123,10 @@ Rx <- sapply(Rjb, Rx.calc, Ztor = Ztor, W = W, dip = dip,
 
 # Calculate Rrup, again using the "sapply" function
 Rrup <- sapply(Rx, Rrup.calc, Ztor = Ztor, W = W, dip = dip,
-               azimuth = azimuth, Rjb = Rjb)
+               azimuth = azimuth, Rjb = NA)
+# Note: Rjb is not needed as an input parameter because the site is
+#       not located directly on the surface projection of the fault
+#       strike.
 
 
 # Plot the results against Rjb

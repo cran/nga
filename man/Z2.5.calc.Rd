@@ -4,7 +4,7 @@
 \description{
   Estimates the depth parameter \code{Z2.5} from either \code{Z1.5},
   \code{Z1.0}, or \code{Vs30}, in decreasing order of preference, using
-  the guidelines by Campbell and Bozorgina (2007)
+  the guidelines by Campbell and Bozorgina (2007).
 }
 \usage{
 Z2.5.calc(Vs30 = NA, Z1.0 = NA, Z1.5 = NA)

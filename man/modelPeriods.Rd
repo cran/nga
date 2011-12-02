@@ -24,7 +24,8 @@ getPeriod(T, model)
     whether or not to return only positive periods (i.e., spectral
     periods 0.01 sec and greater), excluding PGA (\code{T = 0}), PGV
     (\code{T = -1}), and PGD (\code{T = -2}, in the case of CB08) from the
-    list.}
+    list.  If \code{positive = FALSE}, the periods corresponding to
+    PGA, PGV, and PGD (for the CB08 model) are appended to the list.}
   \item{T}{spectral period at which the ground motion calculation is to
     be performed (sec)} 
 }
@@ -75,7 +76,7 @@ getPeriod(T, model)
   the Geometric Mean Horizontal Component of PGA, PGV, PGD, and 5\%
   Damped Linear Elastic Response Spectra for Periods Ranging from 0.01
   to 10 s. \emph{Earthquake Spectra} \bold{24,} 139--171.
-
+  
   Chiou, B. S.-J., and R. R. Youngs (2008). An NGA Model for the Average
   Horizontal Component of Peak Ground Motion and Response Spectra.
   \emph{Earthquake Spectra} \bold{24,} 173--215.

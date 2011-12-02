@@ -304,7 +304,8 @@ the original BA08 model corresponds to \code{AB11 = 0}.
   
   Atkinson, G. M., and D. M. Boore (2011). Modifications to Existing
   Ground-Motion Prediction Equations in Light of New
-  Data. \emph{Bulletin of the Seismological Society of America} (in press).
+  Data. \emph{Bulletin of the Seismological Society of America}
+  \bold{101,} 1121--1135.
     
   Boore, D. M., and G. M. Atkinson (2008). Ground-Motion Prediction
   Equations for the Average Horizontal Component of PGA, PGV, and
@@ -329,7 +330,7 @@ the original BA08 model corresponds to \code{AB11 = 0}.
   Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
   Unknown Input Parameters when Implementing the NGA Ground-Motion
   Prediction Equations in Engineering Practice.
-  \emph{Earthquake Spectra} (in press).
+  \emph{Earthquake Spectra} \bold{27,} 1219--1235.
 }
 \examples{
 
@@ -389,9 +390,9 @@ ResultsMatrix <- Sa.nga(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
 names(ResultsMatrix)
 
 # To access individual columns of the data frame, use the "$" operator:
-SaMedian <- ResultsMatrix$Y50M.ba
-SaPlusEpsilon <- ResultsMatrix$YplusEpsilon.M.ba
-SaMinusEpsilon <- ResultsMatrix$YminusEpsilon.M.ba
+SaMedian <- ResultsMatrix$Y50.ba
+SaPlusEpsilon <- ResultsMatrix$YplusEpsilon.ba
+SaMinusEpsilon <- ResultsMatrix$YminusEpsilon.ba
 
 # Plot
 plot(T.list, SaMedian, type = "p", log = "xy", col = "blue", pch = 19,
@@ -423,7 +424,7 @@ ResultsMatrix <- Sa.nga(M = M, Rjb = Rjb, Rrup = Rrup, Vs30 = Vs30,
 
 # Access individual columns of the data frame using the "$" operator:
 SaAS08 <- ResultsMatrix$Y50.as
-SaBA08 <- ResultsMatrix$Y50M.ba
+SaBA08 <- ResultsMatrix$Y50.ba
 SaCB08 <- ResultsMatrix$Y50.cb
 SaCY08 <- ResultsMatrix$Y50.cy
 

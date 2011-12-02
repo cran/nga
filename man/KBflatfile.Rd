@@ -17,7 +17,7 @@
   \dQuote{Kaklamanos and Baise}).  For further details on this dataset,
   please refer to Kaklamanos and Baise (2011) and the electronic
   supplement available at
-  \url{http://engineering.tufts.edu/cee/geohazards/researchGMPE.asp}.}
+  \url{http://www.seismosoc.org/publications/BSSA_html/bssa_101-1/2010038-esupp/index.html}.}
 \usage{
 data(KBflatfile)
 }
@@ -88,7 +88,7 @@ data(KBflatfile)
   }
 }
 \source{Electronic supplement of Kaklamanos and Baise (2011), available
-  at \url{http://engineering.tufts.edu/cee/geohazards/researchGMPE.asp}}
+  at \url{http://www.seismosoc.org/publications/BSSA_html/bssa_101-1/2010038-esupp/index.html}}
 \seealso{
   \code{\link{Sa}}, \code{\link{Sa.nga}}
 }
@@ -117,18 +117,18 @@ data(KBflatfile)
   Kaklamanos, J., and L. G. Baise (2011).  Model Validations and
   Comparisons of the Next Generation Attenuation of Ground Motions
   (NGA-West) Project.
-  \emph{Bulletin of the Seismological Society of America}, vol. 101,
-  no. 1 (in press).
+  \emph{Bulletin of the Seismological Society of America}, \bold{101,}
+  160--175. 
 
   Kaklamanos, J., L. G. Baise, and D. M. Boore (2011).  Estimating
   Unknown Input Parameters when Implementing the NGA Ground-Motion
   Prediction Equations in Engineering Practice.
-  \emph{Earthquake Spectra} (in press).  
+  \emph{Earthquake Spectra} \bold{27,} 1219--1235. 
 }
 \keyword{datasets}
 \examples{
 
-# Load dataset
+# Load dataset (this command MUST be typed prior to using the dataset)
 data(KBflatfile)
 
 # See the column names of the dataset
@@ -204,7 +204,8 @@ lines(T.list, SaAS08, lwd = 2, col = "blue")
 lines(T.list, SaBA08, lwd = 2, col = "red")
 lines(T.list, SaCB08, lwd = 2, col = "darkgreen")
 lines(T.list, SaCY08, lwd = 2, col = "purple")
-legend(x = "bottomleft", inset = 0.02, lwd = c(4,2,2,2,2), bty = "n",
+legend(x = "bottomleft", inset = 0.02, lwd = c(-1,2,2,2,2),
+       lty = c(-1,1,1,1,1), pch = c(19,-1,-1,-1,-1), bty = "n",
        col = c("black", "blue", "red", "darkgreen", "purple"),
        legend = c("Observed", "AS08", "BA08", "CB08", "CY08"))
 
@@ -277,7 +278,9 @@ pgaCY08 <- ResultsMatrix2$Y50.cy
 
 
 # Plot the results.
-# For the purpose of generating the plot, Repi is used in place of Rjb.
+# For the purpose of generating the plot, Repi is used in place of
+# Rjb. For small-magnitude events, the area of fault rupture is
+# small, and the assumption Repi = Rjb is not unreasonable.
 plot(Repi, PGA, type = "p", log = "y", pch = 1,
      xlab = "Joyner-Boore Distance, Rjb [km]",
      ylab = "Peak Ground Acceleration, PGA [g]",

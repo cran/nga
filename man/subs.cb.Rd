@@ -22,7 +22,7 @@
   functions on this page require that Z2.5 be input in units of km, 
   while the more comprehensive \code{\link{Sa.cb}} and
   \code{\link{Sa.nga}} functions require that Z2.5 be input in units of
-  m, to be consistent with the units of the other depth parameters).
+  m, to be consistent with the units of the other depth parameters.
 }
 \usage{
 Fmag.cb(M, T)
