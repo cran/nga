@@ -28,15 +28,15 @@ periods.cy(positive = FALSE)
   acceleration (which is a continuous function of \code{T}) from PGA,
   PGV, and PGD.  This is useful for interpolation purposes (only Sa may
   be interpolated) and for plotting the predicted response spectra.
-  \tabular{ll}{
-    \code{periods.as} \tab Returns an array of periods for the AS08
-    model. \cr
-    \code{periods.ba} \tab Returns an array of periods for the BA08
-    model. \cr
-    \code{periods.cb} \tab Returns an array of periods for the CB08
-    model. \cr
-    \code{periods.cy} \tab Returns an array of periods for the CY08
-    model. \cr
+  \describe{
+    \item{\code{periods.as}:}{Returns an array of periods for the AS08
+    model.}
+    \item{\code{periods.ba}:}{Returns an array of periods for the BA08
+    model.}
+    \item{\code{periods.cb}:}{Returns an array of periods for the CB08
+    model.}
+    \item{\code{periods.cy}:}{Returns an array of periods for the CY08
+    model.}
   }
 }
 \value{

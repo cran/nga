@@ -27,64 +27,65 @@ data(KBflatfile)
   parameters at the bottom of the list are comprised of the geometric
   mean of the as-recorded horizontal components, and are presented in
   units of \emph{g}.
-  \tabular{lll}{
-    1. \tab \code{RecNum} \tab Record sequence number in the KB flatfile \cr
-    2. \tab \code{EQID} \tab Earthquake identification number in the KB
-    flatfile  \cr
-    3. \tab \code{EQName} \tab Earthquake name \cr
-    4. \tab \code{Month} \tab Month of the earthquake \cr
-    5. \tab \code{Day} \tab Day of the earthquake \cr
-    6. \tab \code{Year} \tab Year of the earthquake \cr
-    7. \tab \code{StationName} \tab Name of the strong-motion station \cr
-    8. \tab \code{StaID} \tab Identification number of the strong-motion
-    station \cr
-    9. \tab \code{StaNetwork} \tab Network code of the strong-motion
-    station \cr
-    10. \tab \code{StaSeqNum} \tab Sequence number of the strong-motion
-    station in the KB flatfile \cr
-    11. \tab \code{StaLat} \tab Latitude of the strong-motion station (deg) \cr
-    12. \tab \code{StaLong} \tab Longitude of the strong-motion station (deg) \cr 
-    13. \tab \code{M} \tab Moment magnitude of earthquake \cr
-    14. \tab \code{Strike} \tab Strike of the rupture plane (deg) \cr    
-    15. \tab \code{Dip} \tab Dip angle of the rupture plane (deg) \cr
-    16. \tab \code{Rake} \tab Rake angle of fault movement (deg) \cr
-    17. \tab \code{EQmechanism} \tab Earthquake mechanism defined by
-    rake angle \cr
-    18. \tab \code{HypocenterLat} \tab Hypocenter latitude (deg) \cr
-    19. \tab \code{HypocenterLong} \tab Hypocenter longitude (deg) \cr    
-    20. \tab \code{Zhyp} \tab Depth of hypocenter (km) \cr
-    21. \tab \code{FiniteFaultModelFlag} \tab Flag variable indicating
-    if a finite fault model was used (1 = Yes, 0 = No) \cr
-    22. \tab \code{Source_of_SourceParameters} \tab Reference for
-    source parameters (finite fault model / moment tensor soln.) \cr 
-    23. \tab \code{Ztor} \tab Depth to top of rupture (km) \cr
-    24. \tab \code{L} \tab Length of rupture plane (km) \cr   
-    25. \tab \code{W} \tab Down-dip width of rupture plane (km) \cr
-    26. \tab \code{Repi} \tab Epicentral distance (km) \cr
-    27. \tab \code{Rhyp} \tab Hypocentral distance (km) \cr
-    28. \tab \code{Rjb} \tab Joyner-Boore distance (km) \cr
-    29. \tab \code{Rrup} \tab Rupture distance (km) \cr
-    30. \tab \code{Rseis} \tab Seismogenic distance (km) \cr
-    31. \tab \code{Rx} \tab Site coordinate (km) \cr
-    32. \tab \code{Azimuth} \tab Source-to-site azimuth (deg) \cr
-    33. \tab \code{Geology} \tab Surficial geologic unit \cr
-    34. \tab \code{Vs30} \tab Time-averaged shear wave velocity over a
-    subsurface depth of 30 meters (m/s) \cr
-    35. \tab \code{VsFlag} \tab Vs flag variable: 1 for measured Vs, 0
-    for inferred Vs \cr
-    36. \tab \code{VsSource} \tab Source of Vs / geology data \cr
-    37. \tab \code{VsReference} \tab Reference for Vs / geology data \cr
-    38. \tab \code{GroundMotionDataSource} \tab Source of ground motion
-    data \cr
-    39. \tab \code{PGA} \tab Observed peak ground acceleration \cr
-    40. \tab \code{T0.1S} \tab Observed spectral acceleration (Sa) at T
-    = 0.1 sec \cr
-    41. \tab \code{T0.2S} \tab Observed Sa at T = 0.2 sec \cr
-    42. \tab \code{T0.3S} \tab Observed Sa at T = 0.3 sec \cr
-    43. \tab \code{T0.5S} \tab Observed Sa at T = 0.5 sec \cr
-    44. \tab \code{T1.0S} \tab Observed Sa at T = 1.0 sec \cr
-    45. \tab \code{T2.0S} \tab Observed Sa at T = 2.0 sec \cr
-    \tab \tab
+  \describe{
+    \item{1. \code{RecNum}}{Record sequence number in the KB flatfile}
+    \item{2. \code{EQID}}{Earthquake identification number in the KB
+    flatfile}
+    \item{3. \code{EQName}}{Earthquake name}
+    \item{4. \code{Month}}{Month of the earthquake}
+    \item{5. \code{Day}}{Day of the earthquake}
+    \item{6. \code{Year}}{Year of the earthquake}
+    \item{7. \code{StationName}}{Name of the strong-motion station}
+    \item{8. \code{StaID}}{Identification number of the strong-motion
+    station}
+    \item{9. \code{StaNetwork}}{Network code of the strong-motion
+    station}
+    \item{10. \code{StaSeqNum}}{Sequence number of the strong-motion
+    station in the KB flatfile}
+    \item{11. \code{StaLat}}{Latitude of the strong-motion station
+    (deg)}
+    \item{12. \code{StaLong}}{Longitude of the strong-motion station
+    (deg)}
+    \item{13. \code{M}}{Moment magnitude of earthquake}
+    \item{14. \code{Strike}}{Strike of the rupture plane (deg)}
+    \item{15. \code{Dip}}{Dip angle of the rupture plane (deg)}
+    \item{16. \code{Rake}}{Rake angle of fault movement (deg)}
+    \item{17. \code{EQmechanism}}{Earthquake mechanism defined by
+    rake angle}
+    \item{18. \code{HypocenterLat}}{Hypocenter latitude (deg)}
+    \item{19. \code{HypocenterLong}}{Hypocenter longitude (deg)}
+    \item{20. \code{Zhyp}}{Depth of hypocenter (km)}
+    \item{21. \code{FiniteFaultModelFlag}}{Flag variable indicating
+    if a finite fault model was used (1 = Yes, 0 = No)}
+    \item{22. \code{Source_of_SourceParameters}}{Reference for
+    source parameters (finite fault model / moment tensor soln.)}
+    \item{23. \code{Ztor}}{Depth to top of rupture (km)}
+    \item{24. \code{L}}{Length of rupture plane (km)}
+    \item{25. \code{W}}{Down-dip width of rupture plane (km)}
+    \item{26. \code{Repi}}{Epicentral distance (km)}
+    \item{27. \code{Rhyp}}{Hypocentral distance (km)}
+    \item{28. \code{Rjb}}{Joyner-Boore distance (km)}
+    \item{29. \code{Rrup}}{Rupture distance (km)}
+    \item{30. \code{Rseis}}{Seismogenic distance (km)}
+    \item{31. \code{Rx}}{Site coordinate (km)}
+    \item{32. \code{Azimuth}}{Source-to-site azimuth (deg)}
+    \item{33. \code{Geology}}{Surficial geologic unit}
+    \item{34. \code{Vs30}}{Time-averaged shear wave velocity over a
+    subsurface depth of 30 meters (m/s)}
+    \item{35. \code{VsFlag}}{Vs flag variable: 1 for measured Vs, 0
+    for inferred Vs}
+    \item{36. \code{VsSource}}{Source of Vs / geology data}
+    \item{37. \code{VsReference}}{Reference for Vs / geology data}
+    \item{38. \code{GroundMotionDataSource}}{Source of ground motion
+    data}
+    \item{39. \code{PGA}}{Observed peak ground acceleration}
+    \item{40. \code{T0.1S}}{Observed spectral acceleration (Sa) at T
+    = 0.1 sec}
+    \item{41. \code{T0.2S}}{Observed Sa at T = 0.2 sec}
+    \item{42. \code{T0.3S}}{Observed Sa at T = 0.3 sec}
+    \item{43. \code{T0.5S}}{Observed Sa at T = 0.5 sec}
+    \item{44. \code{T1.0S}}{Observed Sa at T = 1.0 sec}
+    \item{45. \code{T2.0S}}{Observed Sa at T = 2.0 sec}
   }
 }
 \source{Electronic supplement of Kaklamanos and Baise (2011), available

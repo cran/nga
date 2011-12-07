@@ -58,23 +58,24 @@ SaMedian.cb(M, Rjb, Rrup, Ztor, Frv, Fnm, dip, Vs30, Z2.5, T)
   \item{T}{Spectral period (sec). Use 0 for PGA, -1 for PGV, and -2 for PGD.}
 }
 \details{
-  \tabular{ll}{
-    \code{Fmag.cb} \tab Magnitude term (Eqn 2 of Campbell and Bozorgnia (2008)).\cr
-    \code{Fdist.cb} \tab Distance term (Eqn 3).\cr
-    \code{Fflt.cb} \tab Fault mechanism term (Eqns 4 and 5).\cr
-    \code{Fhng.cb} \tab Hanging wall term (Eqns 6 to 10).\cr
-    \code{Fsite.cb} \tab Shallow site response term (Eqn 11).\cr
-    \code{Fsed.cb} \tab Basin response term (Eqn 12).\cr
-    \code{Alpha.cb} \tab Partial derivative of site response function (\code{Fsite.cb})
-    with respect to \code{A1100} (Eqn 17).\cr
-    \code{Sigma.cb} \tab Intra-event standard deviation (Eqn 15).\cr
-    \code{Tau.cb} \tab Inter-event standard deviation (Eqn 14).\cr
-    \code{SigmaTot.cb} \tab Total standard deviation of the geometric
-    mean horizontal component of LnY (Eqn 16).\cr
-    \code{SigmaArb.cb} \tab Total standard deviation of the arbitrary
-    horizontal component of LnY (Eqn 18).\cr
-    \code{A1100.cb} \tab Calculation of median PGA when \code{Vs30 = 1100 m/s}\cr
-    \code{SaMedian.cb} \tab Median estimate of ground motion (Eqn 1).
+  \describe{
+    \item{\code{Fmag.cb}}{Magnitude term (Eqn 2 of Campbell and Bozorgnia (2008)).}
+    \item{\code{Fdist.cb}}{Distance term (Eqn 3).}
+    \item{\code{Fflt.cb}}{Fault mechanism term (Eqns 4 and 5).}
+    \item{\code{Fhng.cb}}{Hanging wall term (Eqns 6 to 10).}
+    \item{\code{Fsite.cb}}{Shallow site response term (Eqn 11).}
+    \item{\code{Fsed.cb}}{Basin response term (Eqn 12).}
+    \item{\code{Alpha.cb}}{Partial derivative of site response
+    function (\code{Fsite.cb}) with respect to \code{A1100} (Eqn 17).}
+    \item{\code{Sigma.cb}}{Intra-event standard deviation (Eqn 15).}
+    \item{\code{Tau.cb}}{Inter-event standard deviation (Eqn 14).}
+    \item{\code{SigmaTot.cb}}{Total standard deviation of the geometric
+    mean horizontal component of LnY (Eqn 16).}
+    \item{\code{SigmaArb.cb}}{Total standard deviation of the arbitrary
+    horizontal component of LnY (Eqn 18).}
+    \item{\code{A1100.cb}}{Calculation of median PGA when \code{Vs30 =
+    1100 m/s}}	
+    \item{\code{SaMedian.cb}}{Median estimate of ground motion (Eqn 1).}
   }
 }
 \value{

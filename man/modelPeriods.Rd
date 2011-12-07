@@ -42,17 +42,15 @@ getPeriod(T, model)
   \code{modelPeriods} returns a vector of periods that have defined
   coefficients for the specified NGA model (sec).
   
-  
   \code{getPeriods} returns a three-element list with components
   \code{interp,} \code{lower,} and \code{upper}:
-  \tabular{lll}{
-       \tab  \code{interp} \tab a logical value indicating whether or not
-       interpolation is necessary given the spectral period \code{T} \cr
-       \tab  \code{lower} \tab gives the greatest period less than
-       \code{T} that has defined model coefficients (if \code{interp = TRUE}) \cr
-       \tab  \code{upper} \tab gives the smallest period greater than
-       \code{T} that has defined model coefficients (if \code{interp = TRUE})
-  }
+  \item{interp}{a logical value indicating whether or not
+    interpolation is necessary given the spectral period \code{T}}
+  \item{lower}{gives the greatest period less than \code{T} that has
+    defined model coefficients (if \code{interp = TRUE})}
+  \item{upper}{gives the smallest period greater than \code{T} that
+    has defined model coefficients (if \code{interp = TRUE})}
+
   If \code{interp = FALSE}, then \code{lower} and \code{upper} contain
   null values.
 }

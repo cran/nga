@@ -67,28 +67,30 @@ SaMedian.as(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, Fas, Fhw, dip, Vs30, Z1.0, W, T)
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{
-  \tabular{ll}{
-    \code{f1.as} \tab Base model (Eqns 2 and 3 of Abrahamson and Silva
-    (2008)).\cr
-    \code{f5.as} \tab Site response model (Eqns 4 to 6).\cr
-    \code{f4.as} \tab Hanging wall model (Eqns 7 to 12); Eqn 12 modified
-    in Abrahamson and Silva (2009).\cr
-    \code{f6.as} \tab Depth to top of rupture model (Eqn 13).\cr
-    \code{f8.as} \tab Large distance model (Eqns 14 and 15).\cr
-    \code{f10.as} \tab Soil depth model (Eqns 16 to 20).\cr
-    \code{Alpha.as} \tab Partial derivative of site response function (\code{f5.as})
-    with respect to \code{PGA1100} (Eqn 26; corrected in Abrahamson and Silva
-    (2009)).\cr
-    \code{Sigma0.as} \tab Intra-event standard deviation of the observed
-    ground motion for the linear site response range (Eqn 27).\cr
-    \code{Tau0.as} \tab Inter-event standard deviation of the observed
-    ground motion for the linear site response range (Eqn 28).\cr
-    \code{Sigma.as} \tab Intra-event standard deviation (Eqn 24;
-    corrected in Abrahamson and Silva (2009)).\cr
-    \code{Tau.as} \tab Inter-event standard deviation (Eqn 25).\cr
-    \code{SigmaTot.as} \tab Total standard deviation. \cr
-    \code{PGA1100.as} \tab Calculation of median PGA when \code{Vs30 = 1100 m/s}\cr
-    \code{SaMedian.as} \tab Median estimate of ground motion (Eqn 1).
+  \describe{
+    \item{\code{f1.as}}{Base model (Eqns 2 and 3 of Abrahamson and
+    Silva (2008)).}
+    \item{\code{f5.as}}{Site response model (Eqns 4 to 6).}
+    \item{\code{f4.as}}{Hanging wall model (Eqns 7 to 12); Eqn 12
+    modified in Abrahamson and Silva (2009).}
+    \item{\code{f6.as}}{Depth to top of rupture model (Eqn 13).}
+    \item{\code{f8.as}}{Large distance model (Eqns 14 and 15).}
+    \item{\code{f10.as}}{Soil depth model (Eqns 16 to 20).}
+    \item{\code{Alpha.as}}{Partial derivative of site response
+    function (\code{f5.as}) with respect to \code{PGA1100} (Eqn 26;
+    corrected in Abrahamson and Silva (2009)).}
+    \item{\code{Sigma0.as}}{Intra-event standard deviation of the
+    observed ground motion for the linear site response range (Eqn
+    27).}
+    \item{\code{Tau0.as}}{Inter-event standard deviation of the observed
+    ground motion for the linear site response range (Eqn 28).}
+    \item{\code{Sigma.as}}{Intra-event standard deviation (Eqn 24;
+    corrected in Abrahamson and Silva (2009)).}
+    \item{\code{Tau.as}}{Inter-event standard deviation (Eqn 25).}
+    \item{\code{SigmaTot.as}}{Total standard deviation.}
+    \item{\code{PGA1100.as}}{Calculation of median PGA when \code{Vs30
+    = 1100 m/s}}
+    \item{\code{SaMedian.as}}{Median estimate of ground motion (Eqn 1).}
   }
 }
 \value{

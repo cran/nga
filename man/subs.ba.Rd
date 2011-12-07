@@ -38,12 +38,12 @@ SaMedian.ba(M, Rjb, Vs30, U, SS, NS, RS, AB11, T)
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{
-  \tabular{ll}{
-    \code{Fd.ba} \tab Distance function (Eqns 3 and 4 of Boore and Atkinson
-    (2008)).\cr
-    \code{Fm.ba} \tab Magnitude function (Eqn 5).\cr
-    \code{Fs.ba} \tab Site amplification function (Eqns 6 to 13).\cr
-    \code{SaMedian.ba} \tab Median estimate of ground motion (Eqn 1).
+  \describe{
+    \item{\code{Fd.ba}}{Distance function (Eqns 3 and 4 of Boore and
+    Atkinson (2008)).}
+    \item{\code{Fm.ba}}{Magnitude function (Eqn 5).}
+    \item{\code{Fs.ba}}{Site amplification function (Eqns 6 to 13).}
+    \item{\code{SaMedian.ba}}{Median estimate of ground motion (Eqn 1).}
   }
 }
 \value{

@@ -50,14 +50,15 @@ SaMedian.cy(M, Rjb, Rrup, Rx, Ztor, Frv, Fnm, AS, Fhw, dip, Vs30, Z1.0, T)
   \item{T}{Spectral period (sec). Use 0 for PGA and -1 for PGV.}
 }
 \details{
-  \tabular{ll}{
-    \code{LnYref.cy} \tab Median ground motion on reference rock site (Eqn 13a
-    of Chiou and Youngs (2008)).\cr
-    \code{NL.cy} \tab Nonlinear site response term (Eqns 10 and 21).\cr
-    \code{Sigma.cy} \tab Inter-event standard deviation (Eqn 20).\cr
-    \code{Tau.cy} \tab Intra-event standard deviation (Eqn 19).\cr
-    \code{SigmaTot.cy} \tab Total standard deviation (Eqn 21).\cr
-    \code{SaMedian.cy} \tab Median estimate of ground motion, with site response (Eqn 13b).
+  \describe{
+    \item{\code{LnYref.cy}}{Median ground motion on reference rock
+    site (Eqn 13a of Chiou and Youngs (2008)).}
+    \item{\code{NL.cy}}{Nonlinear site response term (Eqns 10 and 21).}
+    \item{\code{Sigma.cy}}{Intra-event standard deviation (Eqn 20).}
+    \item{\code{Tau.cy}}{Inter-event standard deviation (Eqn 19).}
+    \item{\code{SigmaTot.cy}}{Total standard deviation (Eqn 21).}
+    \item{\code{SaMedian.cy}}{Median estimate of ground motion, with
+    site response (Eqn 13b).}
   }
 }
 \value{

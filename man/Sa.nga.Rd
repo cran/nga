@@ -100,119 +100,115 @@ Sa.nga(M, Rjb, Vs30, T, Rrup = NA, Rx = NA, dip = NA, W = NA,
   following 62 columns:
 
   \bold{Input Variables:}
-  \tabular{ll}{
-    \code{T} \tab Spectral period, sec [input] \cr
-    \code{M} \tab Moment magnitude [input] \cr
-    \code{Rjb} \tab Joyner-Boore distance (km) [input] \cr
-    \code{Rrup.in} \tab Rupture distance (km) [input] \cr
-    \code{Rrup.out} \tab Rupture distance (km) [calculated if
-    \code{Rrup.in} is not specified] \cr
-    \code{Rx.in} \tab Site coordinate (km) [input] \cr
-    \code{Rx.out} \tab Site coordinate (km) [calculated if \code{Rx.in} is not
-    specified] \cr
-    \code{azimuth.in} \tab source-to-site azimuth (deg) [input] \cr
-    \code{azimuth.out} \tab source-to-site azimuth (deg) [calculated if
-    \code{azimuth.in} is not specified] \cr
-    \code{Fhw} \tab Hanging wall flag \cr
-    \code{Zhyp.in} \tab hypocentral depth (km) [input] \cr
-    \code{Zhyp.out} \tab hypocentral depth (km) [calculated if
-    \code{Zhyp.in} is not specified] \cr
-    \code{rake.in} \tab Rake angle of fault movement (deg) [input] \cr
-    \code{rake.out} \tab Rake angle of fault movement (deg) [calculated
-    if \code{rake.in} is not specified] \cr
-    \code{Frv1} \tab Reverse style-of-faulting flag for AS08, BA08, and
-    CY08 [input] \cr
-    \code{Frv2.cb} \tab Reverse style-of-faulting flag for CB08 \cr
-    \code{Fnm1} \tab Normal style-of-faulting flag for AB08 and CY08 \cr
-    \code{Fnm2.ba} \tab Normal style-of-faulting flag for BA08 \cr
-    \code{Fnm3.cb} \tab Normal style-of-faulting flag for CB08 \cr
-    \code{dip.in} \tab Fault dip angle (deg) [input] \cr
-    \code{dip.out} \tab Fault dip angle (deg) [calculated if \code{dip.in} is
-    not specified] \cr
-    \code{W.in} \tab Down-dip rupture width (km) [input] \cr
-    \code{W.out} \tab Down-dip rupture width (km) [calculated if
-    \code{W.in} is not specified] \cr
-    \code{Ztor.in} \tab Depth to top of rupture (km) [input] \cr
-    \code{Ztor.out} \tab Depth to top of rupture (km) [calculated if
-    \code{Ztor.in} is not specified] \cr
-    \code{Vs30} \tab Time-averaged shear wave velocity over 30 m
-    subsurface depth  (m/sec) [input] \cr
-    \code{Z1.0in} \tab Depth to Vs of 1.0 km/sec  (m) [input] \cr
-    \code{Z1.0as} \tab Depth to Vs of 1.0 km/sec  (m) [calculated for
-    use in AS08 model] \cr
-    \code{Z1.0cy} \tab Depth to Vs of 1.0 km/sec  (m) [calculated for
-    use in CY08 model] \cr
-    \code{Z1.5in} \tab Depth to Vs of 1.5 km/sec  (m) [input] \cr
-    \code{Z2.5in} \tab Depth to Vs of 2.5 km/sec  (m) [input] \cr
-    \code{Z2.5out} \tab Depth to Vs of 2.5 km/sec  (m) [calculated from
-    \code{Z1.0} for use in CB08 model] \cr
-    \code{Fas} \tab Aftershock flag [input] \cr
-    \code{epsilon} \tab number of standard deviations considered in the
-    calculations [input] \cr
-  }
-  \bold{Output Variables:}
-  \tabular{ll}{
-    \bold{AS08 Model:} \tab  \cr
-    \code{Y50.as} \tab Median ground motion estimate using AS08 (\code{epsilon}
-    = 0) \cr
-    \code{YplusEpsilon.meas.as} \tab Upper ground motion estimate
-    using AS08, for measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{YplusEpsilon.est.as} \tab Upper ground motion estimate
-    using AS08, for estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-    \code{YminusEpsilon.meas.as} \tab Lower ground motion estimate
-    using AS08, for measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{YminusEpsilon.est.as} \tab Lower ground motion estimate
-    using AS08, for estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-    \code{sdMeas.as} \tab total standard deviation using AS08, for
-    measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{sdEst.as} \tab total standard deviation using AS08, for
-    estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-    \bold{BA08 Model:} \tab  \cr
-    \code{Y50.ba} \tab Median ground motion estimate using BA08 \cr
-    \code{Y50mod.ba} \tab Median ground motion estimate using modified
-    BA08 (\code{AB11 = 1}) \cr
-    \code{YplusEpsilon.ba} \tab Upper ground motion estimate
-    using BA08 \cr
-    \code{YplusEpsilon.mod.ba} \tab Upper ground motion estimate
-    using modified BA08 (\code{AB11 = 1}) \cr
-    \code{YminusEpsilon.ba} \tab Lower ground motion estimate
-    using BA08 \cr
-    \code{YminusEpsilon.mod.ba} \tab Lower ground motion estimate
-    using modified BA08 (\code{AB11 = 1}) \cr
-    \code{sd.ba} \tab total standard deviation using BA08 \cr
-    \bold{CB08 Model:} \tab  \cr
-    \code{Y50.cb} \tab Median ground motion estimate using CB08 (\code{epsilon}
-    = 0) \cr
-    \code{YplusEpsilon.GM.cb} \tab Upper CB08 estimate for the
-    geometric mean horizontal component (\code{arb = 0}) \cr
-    \code{YplusEpsilon.arb.cb} \tab Upper CB08 estimate for the
-    arbitrary horizontal component (\code{arb = 1}) \cr
-    \code{YminusEpsilon.GM.cb} \tab Lower CB08 estimate for the
-    geometric mean horizontal component (\code{arb = 0}) \cr
-    \code{YminusEpsilon.arb.cb} \tab Lower CB08 estimate for the
-    arbitrary horizontal component (\code{arb = 1}) \cr
-    \code{sdGM.cb} \tab CB08 total standard deviation
-    for the geometric mean horizontal component (\code{arb = 0}) \cr
-    \code{sdArb.cb} \tab CB08 total standard deviation for the
-    arbitrary horizontal component (\code{arb = 1}) \cr
-    \bold{CY08 Model:} \tab  \cr
-    \code{Y50.cy} \tab Median ground motion estimate using CY08 (\code{epsilon}
-    = 0) \cr
-    \code{YplusEpsilon.meas.cy} \tab Upper ground motion estimate
-    using CY08, for measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{YplusEpsilon.est.cy} \tab Upper ground motion estimate
-    using CY08, for estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-    \code{YminusEpsilon.meas.cy} \tab Lower ground motion estimate
-    using CY08, for measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{YminusEpsilon.est.cy} \tab Lower ground motion estimate
-    using CY08, for estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-    \code{sdMeas.cy} \tab total standard deviation using CY08, for
-    measured \code{Vs30} (\code{VsFlag = 1}) \cr
-    \code{sdEst.cy} \tab total standard deviation using CY08, for
-    estimated \code{Vs30} (\code{VsFlag = 0}) \cr
-     \tab
-  }
+  \item{T}{Spectral period, sec [input]}
+  \item{M}{Moment magnitude [input]}
+  \item{Rjb}{Joyner-Boore distance (km) [input]}
+  \item{Rrup.in}{Rupture distance (km) [input]}
+  \item{Rrup.out}{Rupture distance (km) [calculated if
+  \code{Rrup.in} is not specified]}
+  \item{Rx.in}{Site coordinate (km) [input]}
+  \item{Rx.out}{Site coordinate (km) [calculated if \code{Rx.in} is not
+  specified]}
+  \item{azimuth.in}{source-to-site azimuth (deg) [input]}
+  \item{azimuth.out}{source-to-site azimuth (deg) [calculated if
+  \code{azimuth.in} is not specified]}
+  \item{Fhw}{Hanging wall flag} 
+  \item{Zhyp.in}{hypocentral depth (km) [input]}
+  \item{Zhyp.out}{hypocentral depth (km) [calculated if
+  \code{Zhyp.in} is not specified]}
+  \item{rake.in}{Rake angle of fault movement (deg) [input]}
+  \item{rake.out}{Rake angle of fault movement (deg) [calculated
+  if \code{rake.in} is not specified]}
+  \item{Frv1}{Reverse style-of-faulting flag for AS08, BA08, and
+  CY08 [input]}
+  \item{Frv2.cb}{Reverse style-of-faulting flag for CB08}
+  \item{Fnm1}{Normal style-of-faulting flag for AB08 and CY08}
+  \item{Fnm2.ba}{Normal style-of-faulting flag for BA08}
+  \item{Fnm3.cb}{Normal style-of-faulting flag for CB08}
+  \item{dip.in}{Fault dip angle (deg) [input]}
+  \item{dip.out}{Fault dip angle (deg) [calculated if \code{dip.in} is
+  not specified]}
+  \item{W.in}{Down-dip rupture width (km) [input]}
+  \item{W.out}{Down-dip rupture width (km) [calculated if
+  \code{W.in} is not specified]}
+  \item{Ztor.in}{Depth to top of rupture (km) [input]}
+  \item{Ztor.out}{Depth to top of rupture (km) [calculated if
+  \code{Ztor.in} is not specified]}
+  \item{Vs30}{Time-averaged shear wave velocity over 30 m
+  subsurface depth  (m/sec) [input]}
+  \item{Z1.0in}{Depth to Vs of 1.0 km/sec  (m) [input]}
+  \item{Z1.0as}{Depth to Vs of 1.0 km/sec  (m) [calculated for
+  use in AS08 model}
+  \item{Z1.0cy}{Depth to Vs of 1.0 km/sec  (m) [calculated for
+  use in CY08 model]}
+  \item{Z1.5in}{Depth to Vs of 1.5 km/sec  (m) [input]}
+  \item{Z2.5in}{Depth to Vs of 2.5 km/sec  (m) [input]}
+  \item{Z2.5out}{Depth to Vs of 2.5 km/sec  (m) [calculated from
+  \code{Z1.0} for use in CB08 model]}
+  \item{Fas}{Aftershock flag [input]}
+  \item{epsilon}{number of standard deviations considered in the
+  calculations [input]}
 
+  \bold{Output Variables:}
+
+  \bold{AS08 Model:}
+  \item{Y50.as}{Median ground motion estimate using AS08 (\code{epsilon}
+    = 0)}
+  \item{YplusEpsilon.meas.as}{Upper ground motion estimate
+  using AS08, for measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{YplusEpsilon.est.as}{Upper ground motion estimate
+  using AS08, for estimated \code{Vs30} (\code{VsFlag = 0})}
+  \item{YminusEpsilon.meas.as}{Lower ground motion estimate
+  using AS08, for measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{YminusEpsilon.est.as}{Lower ground motion estimate
+  using AS08, for estimated \code{Vs30} (\code{VsFlag = 0})}
+  \item{sdMeas.as}{total standard deviation using AS08, for
+  measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{sdEst.as}{total standard deviation using AS08, for
+  estimated \code{Vs30} (\code{VsFlag = 0})}
+  \bold{BA08 Model:}
+  \item{Y50.ba}{Median ground motion estimate using BA08}
+  \item{Y50mod.ba}{Median ground motion estimate using modified
+  BA08 (\code{AB11 = 1})}
+  \item{YplusEpsilon.ba}{Upper ground motion estimate
+  using BA08}
+  \item{YplusEpsilon.mod.ba}{Upper ground motion estimate
+  using modified BA08 (\code{AB11 = 1})}
+  \item{YminusEpsilon.ba}{Lower ground motion estimate
+  using BA08}
+  \item{YminusEpsilon.mod.ba}{Lower ground motion estimate
+  using modified BA08 (\code{AB11 = 1})}
+  \item{sd.ba}{total standard deviation using BA08}
+  \bold{CB08 Model:}  
+  \item{Y50.cb}{Median ground motion estimate using CB08 (\code{epsilon}
+  = 0)}
+  \item{YplusEpsilon.GM.cb}{Upper CB08 estimate for the
+  geometric mean horizontal component (\code{arb = 0})}
+  \item{YplusEpsilon.arb.cb}{Upper CB08 estimate for the
+  arbitrary horizontal component (\code{arb = 1})}
+  \item{YminusEpsilon.GM.cb}{Lower CB08 estimate for the
+  geometric mean horizontal component (\code{arb = 0})}
+  \item{YminusEpsilon.arb.cb}{Lower CB08 estimate for the
+  arbitrary horizontal component (\code{arb = 1})}
+  \item{sdGM.cb}{CB08 total standard deviation
+  for the geometric mean horizontal component (\code{arb = 0})}
+  \item{sdArb.cb}{CB08 total standard deviation for the
+  arbitrary horizontal component (\code{arb = 1})}
+  \bold{CY08 Model:}  
+  \item{Y50.cy}{Median ground motion estimate using CY08 (\code{epsilon}
+  = 0)}
+  \item{YplusEpsilon.meas.cy}{Upper ground motion estimate
+  using CY08, for measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{YplusEpsilon.est.cy}{Upper ground motion estimate
+  using CY08, for estimated \code{Vs30} (\code{VsFlag = 0})}
+  \item{YminusEpsilon.meas.cy}{Lower ground motion estimate
+  using CY08, for measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{YminusEpsilon.est.cy}{Lower ground motion estimate
+  using CY08, for estimated \code{Vs30} (\code{VsFlag = 0})}
+  \item{sdMeas.cy}{total standard deviation using CY08, for
+  measured \code{Vs30} (\code{VsFlag = 1})}
+  \item{sdEst.cy}{total standard deviation using CY08, for
+  estimated \code{Vs30} (\code{VsFlag = 0})}
 }
 \details{
 Note that T (spectral period) can be a vector, while all other arguments are 
@@ -220,11 +216,11 @@ scalars.
 
 In the \dQuote{Output Section} of this function, \dQuote{Y} refers to
 the ground motion parameter of interest, which can be:
-\tabular{l}{
-  Sa = Spectral acceleration (g); \cr
-  PGA = Peak ground acceleration (g), calculated by evaluating Sa at
-  \code{T = 0}; \cr
-  PGV = Peak ground velocity (cm/sec), calculated by evaluating Sa at
+\enumerate{
+  \item Sa = Spectral acceleration (g)
+  \item PGA = Peak ground acceleration (g), calculated by evaluating Sa at
+  \code{T = 0};
+  \item PGV = Peak ground velocity (cm/sec), calculated by evaluating Sa at
   \code{T = -1}.
 }
 Because only the CB08 model has coefficients for PGD (peak ground

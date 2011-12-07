@@ -18,19 +18,20 @@ coefs.cy()
 \details{
   Here is a list of the period-independent coefficients for each of the
   NGA models:
-  
-  \tabular{ll}{
-    \code{coefs.as} \tab \code{c, c1, c2, c4,} and \code{n} (Table 4 in Abrahamson and
-    Silva (2008)). \cr
-    \code{coefs.ba} \tab \code{a1, pga.low, a2, V1, V2,} and \code{Vref}
-    (Site-amplification coefficients in Table 4 of Boore and Atkinson
-    (2008)). \cr
-     \tab \code{Mref} and \code{Rref} (Distance-scaling coefficients in Table 6) \cr
-     \code{coefs.cb} \tab \code{c} and \code{n} (bottom of Table 2 in Campbell and
-     Bozorgnia (2008)). \cr
-    \code{coefs.cy} \tab \code{c2, c3, c4, c4a, cRB, cHM,} and \code{cGamma3} (Table
-    1 in Chiou and Youngs (2008)).
-  }
+
+  \describe{
+   \item{\code{coefs.as:}}{\code{c, c1, c2, c4,} and \code{n} (Table 4 in
+           Abrahamson and Silva (2008)).}
+  \item{\code{coefs.ba:}}{\code{a1, pga.low, a2, V1, V2,} and \code{Vref}
+          (Site-amplification coefficients in Table 4 of Boore and Atkinson
+  	  (2008));}
+  \item{}{\code{Mref} and \code{Rref} (Distance-scaling coefficients in
+            Table 6).}
+  \item{\code{coefs.cb:}}{\code{c} and \code{n} (bottom of Table 2 in
+          Campbell and Bozorgnia (2008)).}
+  \item{\code{coefs.cy:}}{\code{c2, c3, c4, c4a, cRB, cHM,} and \code{cGamma3} (Table
+          1 in Chiou and Youngs (2008)).}
+   }
 }
 \value{
   Nothing is returned; variables are assigned in the parent
